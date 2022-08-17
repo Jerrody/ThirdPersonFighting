@@ -17,7 +17,7 @@ namespace Characters.Player
         [SerializeField, Range(0, float.MaxValue)]
         private float maxJumpTime = 0.5f;
 
-        private Vector3 _velocity = Vector3.zero;
+        public Vector3 Velocity { get; private set; } = Vector3.zero;
 
         private bool _isJumpPressed;
         private bool _isJumping;
@@ -30,7 +30,7 @@ namespace Characters.Player
 
         private void Update()
         {
-            Controller.Move(_velocity * Time.deltaTime);
+            Controller.Move(Velocity * Time.deltaTime);
             HandleGravity();
             HandleJump();
         }
@@ -46,14 +46,14 @@ namespace Characters.Player
         {
             if (Controller.isGrounded)
             {
-                _velocity.y = groundedGravityForce;
+                Velocity = new Vector3(Velocity.x, groundedGravityForce, Velocity.z);
             }
             else
             {
-                var previousYVelocity = _velocity.y;
-                var newYVelocity = _velocity.y + (gravityForce * Time.deltaTime);
+                var previousYVelocity = Velocity.y;
+                var newYVelocity = Velocity.y + (gravityForce * Time.deltaTime);
                 var nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-                _velocity.y = nextYVelocity;
+                Velocity = new Vector3(Velocity.x, nextYVelocity, Velocity.z);
             }
         }
 
@@ -63,7 +63,7 @@ namespace Characters.Player
             {
                 _isJumping = true;
                 _isJumpPressed = false;
-                _velocity.y = _initialJumpVelocity * 0.5f;
+                Velocity = new Vector3(Velocity.x, _initialJumpVelocity * 0.5f, Velocity.z);
             }
             else if (_isJumping && Controller.isGrounded && !_isJumpPressed)
             {
@@ -75,7 +75,7 @@ namespace Characters.Player
         {
             var axisValue = context.ReadValue<Vector2>();
 
-            _velocity = new Vector3(moveSpeed * axisValue.x, _velocity.y, moveSpeed * axisValue.y);
+            Velocity = new Vector3(walkSpeed * axisValue.x, Velocity.y, walkSpeed * axisValue.y);
         }
 
         public void Jump(InputAction.CallbackContext context)

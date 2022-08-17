@@ -8,8 +8,9 @@ namespace Characters
     [RequireComponent(typeof(HealthComponent))]
     public abstract class EntityController : MonoBehaviour, IHealable, IDamageable
     {
-        [SerializeField] protected float moveSpeed = 5.0f;
-        
+        [SerializeField] protected float walkSpeed = 5.0f;
+        [SerializeField] protected float runSpeed = 10.0f;
+
         protected CharacterController Controller;
         protected HealthComponent Health;
 
