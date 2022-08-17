@@ -1,8 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using Characters.Components;
+using Characters.Interfaces;
 using UnityEngine;
 
-
-public class EntityController : MonoBehaviour
+namespace Characters
 {
+    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(HealthComponent))]
+    public abstract class EntityController : MonoBehaviour, IHealable, IDamageable
+    {
+        [SerializeField] protected float moveSpeed = 5.0f;
+        
+        protected CharacterController Controller;
+        protected HealthComponent Health;
+
+        private void Awake()
+        {
+            Controller = GetComponent<CharacterController>();
+            Health = GetComponent<HealthComponent>();
+        }
+
+        public void TakeDamage(uint damageAmount)
+        {
+            Health.TakeDamage(damageAmount);
+        }
+
+        public void HealUp(uint healAmount)
+        {
+            Health.HealUp(healAmount);
+        }
+
+        public bool IsAlive()
+        {
+            return Health.IsAlive;
+        }
+    }
 }

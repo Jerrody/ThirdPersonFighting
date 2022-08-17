@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour
+namespace Characters.Components
 {
-    // Start is called before the first frame update
-    void Start()
+    public sealed class HealthComponent : MonoBehaviour
     {
-        
-    }
+        [SerializeField, Range(0, int.MaxValue)]
+        private int healthAmount = 100;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public bool IsAlive => healthAmount <= 0;
+        private int _totalHealth;
+
+        private void Awake()
+        {
+            _totalHealth = healthAmount;
+        }
+
+        public void TakeDamage(uint damageAmount)
+        {
+            healthAmount -= (int)damageAmount;
+        }
+
+        public void HealUp(uint healAmount)
+        {
+            if (IsAlive)
+                healthAmount = math.clamp(healthAmount - (int)healAmount, 0, _totalHealth);
+        }
     }
 }

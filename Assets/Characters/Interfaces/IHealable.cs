@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class IHealable : MonoBehaviour
+namespace Characters.Interfaces
 {
-    // Start is called before the first frame update
-    void Start()
+    public interface IHealable
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void HealUp(uint healAmount);
     }
 }
