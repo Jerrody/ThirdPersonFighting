@@ -11,7 +11,7 @@ namespace Characters
         [SerializeField] protected float walkSpeed = 5.0f;
         [SerializeField] protected float runSpeed = 10.0f;
 
-        protected CharacterController Controller;
+        public CharacterController Controller { get; protected set; }
         protected HealthComponent Health;
 
         private void Awake()

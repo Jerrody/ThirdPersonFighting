@@ -3,8 +3,20 @@ using UnityEngine.InputSystem;
 
 namespace Characters.Player
 {
-    public class PlayerController : EntityController
+    public delegate void Notify();
+
+    public enum CurrentWeapon
     {
+        Unarmed = 1,
+        Sword = 2,
+        Axe = 3,
+        Bow = 4,
+    }
+
+    public sealed class PlayerController : EntityController
+    {
+        public event Notify WeaponSwitched;
+
         [SerializeField, Range(float.MinValue, 0.0f)]
         private float gravityForce = -9.8f;
 
@@ -17,7 +29,9 @@ namespace Characters.Player
         [SerializeField, Range(0, float.MaxValue)]
         private float maxJumpTime = 0.5f;
 
-        public Vector3 Velocity { get; private set; } = Vector3.zero;
+        public CurrentWeapon CurrentWeapon { get; private set; } = CurrentWeapon.Unarmed;
+
+        private Vector3 _velocity = Vector3.zero;
 
         private bool _isJumpPressed;
         private bool _isJumping;
@@ -30,7 +44,7 @@ namespace Characters.Player
 
         private void Update()
         {
-            Controller.Move(Velocity * Time.deltaTime);
+            Controller.Move(_velocity * Time.deltaTime);
             HandleGravity();
             HandleJump();
         }
@@ -46,14 +60,14 @@ namespace Characters.Player
         {
             if (Controller.isGrounded)
             {
-                Velocity = new Vector3(Velocity.x, groundedGravityForce, Velocity.z);
+                _velocity = new Vector3(_velocity.x, groundedGravityForce, _velocity.z);
             }
             else
             {
-                var previousYVelocity = Velocity.y;
-                var newYVelocity = Velocity.y + (gravityForce * Time.deltaTime);
+                var previousYVelocity = _velocity.y;
+                var newYVelocity = _velocity.y + (gravityForce * Time.deltaTime);
                 var nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-                Velocity = new Vector3(Velocity.x, nextYVelocity, Velocity.z);
+                _velocity = new Vector3(_velocity.x, nextYVelocity, _velocity.z);
             }
         }
 
@@ -63,7 +77,7 @@ namespace Characters.Player
             {
                 _isJumping = true;
                 _isJumpPressed = false;
-                Velocity = new Vector3(Velocity.x, _initialJumpVelocity * 0.5f, Velocity.z);
+                _velocity = new Vector3(_velocity.x, _initialJumpVelocity * 0.5f, _velocity.z);
             }
             else if (_isJumping && Controller.isGrounded && !_isJumpPressed)
             {
@@ -75,7 +89,7 @@ namespace Characters.Player
         {
             var axisValue = context.ReadValue<Vector2>();
 
-            Velocity = new Vector3(walkSpeed * axisValue.x, Velocity.y, walkSpeed * axisValue.y);
+            _velocity = new Vector3(walkSpeed * axisValue.x, _velocity.y, walkSpeed * axisValue.y);
         }
 
         public void Jump(InputAction.CallbackContext context)
