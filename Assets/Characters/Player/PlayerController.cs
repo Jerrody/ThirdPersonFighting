@@ -13,8 +13,10 @@ namespace Characters.Player
         Bow = 4,
     }
 
+    // TODO: Remove jump mechanics.
     public sealed class PlayerController : EntityController
     {
+        // TODO: Make weapon switching and notifying about that.
         public event Notify WeaponSwitched;
 
         [SerializeField, Range(float.MinValue, 0.0f)]
@@ -30,8 +32,10 @@ namespace Characters.Player
         private float maxJumpTime = 0.5f;
 
         public CurrentWeapon CurrentWeapon { get; private set; } = CurrentWeapon.Unarmed;
+        public Vector3 Velocity { get; private set; }
 
-        private Vector3 _velocity = Vector3.zero;
+        private Vector3 _moveDirection = Vector3.zero;
+        private Vector2 _inputMoveAxis = Vector2.zero;
 
         private bool _isJumpPressed;
         private bool _isJumping;
@@ -44,7 +48,12 @@ namespace Characters.Player
 
         private void Update()
         {
-            Controller.Move(_velocity * Time.deltaTime);
+            _moveDirection = new Vector3(_inputMoveAxis.x, _moveDirection.y, _inputMoveAxis.y);
+            _moveDirection = transform.TransformDirection(_moveDirection);
+            _moveDirection *= walkSpeed;
+
+            Controller.Move(_moveDirection * Time.deltaTime);
+
             HandleGravity();
             HandleJump();
         }
@@ -60,14 +69,14 @@ namespace Characters.Player
         {
             if (Controller.isGrounded)
             {
-                _velocity = new Vector3(_velocity.x, groundedGravityForce, _velocity.z);
+                _moveDirection = new Vector3(_moveDirection.x, groundedGravityForce, _moveDirection.z);
             }
             else
             {
-                var previousYVelocity = _velocity.y;
-                var newYVelocity = _velocity.y + (gravityForce * Time.deltaTime);
+                var previousYVelocity = _moveDirection.y;
+                var newYVelocity = _moveDirection.y + (gravityForce * Time.deltaTime);
                 var nextYVelocity = (previousYVelocity + newYVelocity) * 0.5f;
-                _velocity = new Vector3(_velocity.x, nextYVelocity, _velocity.z);
+                _moveDirection = new Vector3(_moveDirection.x, nextYVelocity, _moveDirection.z);
             }
         }
 
@@ -77,7 +86,7 @@ namespace Characters.Player
             {
                 _isJumping = true;
                 _isJumpPressed = false;
-                _velocity = new Vector3(_velocity.x, _initialJumpVelocity * 0.5f, _velocity.z);
+                _moveDirection = new Vector3(_moveDirection.x, _initialJumpVelocity * 0.5f, _moveDirection.z);
             }
             else if (_isJumping && Controller.isGrounded && !_isJumpPressed)
             {
@@ -87,9 +96,9 @@ namespace Characters.Player
 
         public void Move(InputAction.CallbackContext context)
         {
-            var axisValue = context.ReadValue<Vector2>();
+            _inputMoveAxis = context.ReadValue<Vector2>();
 
-            _velocity = new Vector3(walkSpeed * axisValue.x, _velocity.y, walkSpeed * axisValue.y);
+            Velocity = new Vector3(_inputMoveAxis.x * walkSpeed, _moveDirection.y, _inputMoveAxis.y * walkSpeed);
         }
 
         public void Jump(InputAction.CallbackContext context)

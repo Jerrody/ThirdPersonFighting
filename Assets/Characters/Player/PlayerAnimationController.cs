@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Characters.Player
@@ -17,7 +16,7 @@ namespace Characters.Player
 
         private void Update()
         {
-            var velocity = player.Controller.velocity;
+            var velocity = player.Velocity;
 
             Anim.SetFloat(VelocityZParam, velocity.z, 0.1f, Time.deltaTime);
             Anim.SetFloat(VelocityXParam, velocity.x, 0.1f, Time.deltaTime);
