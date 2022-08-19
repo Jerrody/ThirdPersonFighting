@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Weapons
@@ -17,7 +18,7 @@ namespace Weapons
         [SerializeField] protected BoxCollider collisionCollider;
 
         [field: Header("Stats")]
-        public WeaponType WeaponType { get; protected set; }
+        public WeaponType WeaponType { get; private set; }
         [SerializeField] protected uint attackDamage = 1;
         [SerializeField] protected bool isDropped;
 
@@ -26,6 +27,12 @@ namespace Weapons
         [SerializeField] protected Quaternion rotationInHand = Quaternion.identity;
 
         private Rigidbody _rb;
+
+        private void OnValidate()
+        {
+            if (WeaponType == WeaponType.Unarmed)
+                throw new Exception("Should be not `Unarmed` `WeaponType`!");
+        }
 
         private void Awake()
         {

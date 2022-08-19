@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Characters.Player
+namespace Characters.Player.Animations
 {
     internal sealed class PlayerAnimationController : EntityAnimationController
     {
@@ -11,7 +11,7 @@ namespace Characters.Player
 
         private void Start()
         {
-            player.OnWeaponSwitch.AddListener(OnWeaponSwitched);
+            player.OnWeaponSwitched.AddListener(OnWeaponSwitched);
         }
 
         private void Update()
@@ -24,8 +24,8 @@ namespace Characters.Player
 
         private void OnWeaponSwitched(int _)
         {
-            Anim.SetLayerWeight((int)player.WeaponType - 1, 0);
-            Anim.SetLayerWeight((int)player.WeaponType, 1);
+            Anim.SetLayerWeight((int)player.CurrentWeaponType - 1, 0);
+            Anim.SetLayerWeight((int)player.CurrentWeaponType, 1);
         }
     }
 }

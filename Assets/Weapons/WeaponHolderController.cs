@@ -8,6 +8,7 @@ namespace Weapons
         [SerializeField] private BasicWeaponController[] weaponSlots = new BasicWeaponController[2];
         [SerializeField] private PlayerController player;
 
+        public WeaponType CurrentWeaponType { get; private set; }
         private int _activeSlotIndex;
 
         private void Awake()
@@ -22,7 +23,10 @@ namespace Weapons
             _activeSlotIndex = slotIndex;
 
             weaponSlots[_activeSlotIndex == 0 ? 1 : 0].gameObject.SetActive(false);
-            weaponSlots[_activeSlotIndex].gameObject.SetActive(true);
+
+            var currentActiveWeapon = weaponSlots[_activeSlotIndex];
+            currentActiveWeapon.gameObject.SetActive(true);
+            CurrentWeaponType = currentActiveWeapon.WeaponType;
         }
 
         private void OnWeaponDrop()
@@ -40,14 +44,10 @@ namespace Weapons
                 var weapon = Instantiate(takenWeapon, takenWeapon.GetPositionInHands(),
                     takenWeapon.GetRotationInHands());
                 weaponSlots[i] = weapon;
+                // TODO: Take new weapon.
 
                 Destroy(takenWeapon.gameObject);
             }
-        }
-
-        public WeaponType GetCurrentWeaponType()
-        {
-            return weaponSlots[_activeSlotIndex].WeaponType;
         }
     }
 }

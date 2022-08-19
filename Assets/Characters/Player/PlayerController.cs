@@ -15,7 +15,7 @@ namespace Characters.Player
 
         private const float GravityScale = -0.5f;
 
-        public WeaponType WeaponType { get; private set; } = WeaponType.Unarmed;
+        public WeaponType CurrentWeaponType { get; private set; } = WeaponType.Unarmed;
         public Vector3 Velocity { get; private set; }
 
         private Vector3 _moveDirection = Vector3.zero;
@@ -41,6 +41,7 @@ namespace Characters.Player
             int.TryParse(context.control.name, out var numKey);
 
             OnWeaponSwitch?.Invoke(numKey - 1);
+            CurrentWeaponType = GetComponentInChildren<WeaponHolderController>().CurrentWeaponType;
         }
     }
 }
