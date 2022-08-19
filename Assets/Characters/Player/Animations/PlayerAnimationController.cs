@@ -11,7 +11,7 @@ namespace Characters.Player
 
         private void Start()
         {
-            player.WeaponSwitched += WeaponSwitched;
+            player.OnWeaponSwitch.AddListener(OnWeaponSwitched);
         }
 
         private void Update()
@@ -22,10 +22,10 @@ namespace Characters.Player
             Anim.SetFloat(VelocityXParam, velocity.x, 0.1f, Time.deltaTime);
         }
 
-        private void WeaponSwitched()
+        private void OnWeaponSwitched(int _)
         {
-            Anim.SetLayerWeight((int)player.CurrentWeapon - 1, 0);
-            Anim.SetLayerWeight((int)player.CurrentWeapon, 1);
+            Anim.SetLayerWeight((int)player.WeaponType - 1, 0);
+            Anim.SetLayerWeight((int)player.WeaponType, 1);
         }
     }
 }

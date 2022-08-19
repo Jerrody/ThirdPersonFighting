@@ -1,0 +1,11 @@
+Model Information:
+* title:	Axe
+* source:	https://sketchfab.com/3d-models/axe-5038f07f634345f5ac9bfa74fb821c97
+* author:	Yury Misiyuk (https://sketchfab.com/Tim0)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Axe" (https://sketchfab.com/3d-models/axe-5038f07f634345f5ac9bfa74fb821c97) by Yury Misiyuk (https://sketchfab.com/Tim0) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

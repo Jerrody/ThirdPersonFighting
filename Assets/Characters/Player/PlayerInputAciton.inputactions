@@ -15,10 +15,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "2cab4307-cad5-4aae-afc3-115afc79cebd",
-                    "expectedControlType": "Button",
+                    "name": "SwitchWeapons",
+                    "type": "PassThrough",
+                    "id": "74ce47b6-f8b6-412d-b3de-70c81a4114e4",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -82,12 +82,23 @@
                 },
                 {
                     "name": "",
-                    "id": "aad8b4f8-6c0b-4654-a5da-81f71ca986f5",
-                    "path": "<Keyboard>/space",
+                    "id": "378d3166-020e-4119-9831-59d4df9e338d",
+                    "path": "<Keyboard>/1",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "SwitchWeapons",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4e5a5fae-bf38-4667-83d9-b3d2948cfd2d",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeapons",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
