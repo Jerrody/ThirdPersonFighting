@@ -1,4 +1,5 @@
 using UnityEngine;
+using Weapons;
 
 namespace Characters.Player.Animations
 {
@@ -9,9 +10,11 @@ namespace Characters.Player.Animations
         private static readonly int VelocityZParam = Animator.StringToHash("VelocityZ");
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
 
+        private static WeaponType _previousWeaponType;
+
         private void Start()
         {
-            player.OnWeaponSwitched.AddListener(OnWeaponSwitched);
+            player.onWeaponSwitched.AddListener(OnWeaponSwitched);
         }
 
         private void Update()
@@ -22,10 +25,12 @@ namespace Characters.Player.Animations
             Anim.SetFloat(VelocityXParam, velocity.x, 0.1f, Time.deltaTime);
         }
 
-        private void OnWeaponSwitched(int _)
+        private void OnWeaponSwitched(WeaponType currentWeaponType)
         {
-            Anim.SetLayerWeight((int)player.CurrentWeaponType - 1, 0);
-            Anim.SetLayerWeight((int)player.CurrentWeaponType, 1);
+            Anim.SetLayerWeight((int)_previousWeaponType, 0);
+            Anim.SetLayerWeight((int)currentWeaponType, 1);
+
+            _previousWeaponType = currentWeaponType;
         }
     }
 }

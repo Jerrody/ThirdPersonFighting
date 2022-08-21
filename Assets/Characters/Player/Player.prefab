@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c4eb1246f645ca4986fb3b40db09145, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 5993711567369615769}
   weaponSlots:
   - {fileID: 0}
   - {fileID: 0}
@@ -243,7 +244,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5735786, y: 1}
+    m_SensorSize: {x: 1.6233766, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -276,7 +277,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898671823638525150}
-  m_LocalRotation: {x: -0.0161647, y: 0.45059887, z: 0.008160722, w: 0.8925429}
+  m_LocalRotation: {x: -0.016164709, y: 0.45059887, z: 0.008160728, w: 0.8925429}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -321,7 +322,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5735786, y: 1}
+    m_SensorSize: {x: 1.6233766, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -343,6 +344,7 @@ GameObject:
   - component: {fileID: 3229242504056500736}
   - component: {fileID: 5993711567369615769}
   - component: {fileID: 2343562946050458121}
+  - component: {fileID: 3552860723552377559}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -445,6 +447,38 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 74ce47b6-f8b6-412d-b3de-70c81a4114e4
     m_ActionName: CharacterControl/SwitchWeapons[/Keyboard/1,/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5993711567369615769}
+        m_TargetAssemblyTypeName: Characters.Player.PlayerController, Assembly-CSharp
+        m_MethodName: PickUp
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 95f2bbb1-cad1-49b9-8330-7c30dbe5e8ea
+    m_ActionName: CharacterControl/PickUp[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5993711567369615769}
+        m_TargetAssemblyTypeName: Characters.Player.PlayerController, Assembly-CSharp
+        m_MethodName: Drop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8c7479f5-272f-4519-a149-e25fdb56de67
+    m_ActionName: CharacterControl/Drop[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: CharacterControl
@@ -464,6 +498,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 10
+  onWeaponSwitched:
+    m_PersistentCalls:
+      m_Calls: []
+  onAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  onWeaponDrop:
+    m_PersistentCalls:
+      m_Calls: []
+  onWeaponTake:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2343562946050458121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,6 +523,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthAmount: 100
+--- !u!65 &3552860723552377559
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5908174856833693791}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.4022582, y: 0.64297926, z: 1.316705}
+  m_Center: {x: -0.054495186, y: -0.72677714, z: 0.027242064}
 --- !u!1 &6151200529391184517
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,7 +602,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5735786, y: 1}
+    m_SensorSize: {x: 1.6233766, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -963,7 +1022,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.5735786, y: 1}
+    m_SensorSize: {x: 1.6233766, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

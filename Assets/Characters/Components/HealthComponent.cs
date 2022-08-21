@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Characters.Components
 {
+    // TODO: Write tests.
     public sealed class HealthComponent : MonoBehaviour
     {
         [SerializeField, Range(0, int.MaxValue)]

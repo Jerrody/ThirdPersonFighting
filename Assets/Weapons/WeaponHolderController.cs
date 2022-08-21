@@ -5,48 +5,52 @@ namespace Weapons
 {
     public sealed class WeaponHolderController : MonoBehaviour
     {
-        [SerializeField] private BasicWeaponController[] weaponSlots = new BasicWeaponController[2];
         [SerializeField] private PlayerController player;
+        [SerializeField] private MeleeWeaponController[] weaponSlots = new MeleeWeaponController[2];
 
-        public WeaponType CurrentWeaponType { get; private set; }
+        private WeaponType CurrentWeaponType { get; set; }
         private int _activeSlotIndex;
 
-        private void Awake()
+        private void Start()
         {
-            player.OnWeaponTake.AddListener(OnWeaponTake);
-            player.OnWeaponDrop.AddListener(OnWeaponDrop);
-            player.OnWeaponSwitch.AddListener(OnWeaponSwitch);
+            player.onWeaponTake.AddListener(OnWeaponTake);
+            player.onWeaponDrop.AddListener(OnWeaponDrop);
+            player.OnWeaponSwitch += OnWeaponSwitch;
         }
 
-        private void OnWeaponSwitch(int slotIndex)
+        private WeaponType OnWeaponSwitch(int slotIndex)
         {
+            if (_activeSlotIndex == slotIndex) return CurrentWeaponType;
+            weaponSlots[_activeSlotIndex]?.gameObject.SetActive(false);
+
             _activeSlotIndex = slotIndex;
 
-            weaponSlots[_activeSlotIndex == 0 ? 1 : 0].gameObject.SetActive(false);
+            var newActiveWeapon = weaponSlots[_activeSlotIndex];
+            if (newActiveWeapon == null) return WeaponType.Unarmed;
 
-            var currentActiveWeapon = weaponSlots[_activeSlotIndex];
-            currentActiveWeapon.gameObject.SetActive(true);
-            CurrentWeaponType = currentActiveWeapon.WeaponType;
+            newActiveWeapon.gameObject.SetActive(true);
+            CurrentWeaponType = newActiveWeapon.GetWeaponType();
+
+            return CurrentWeaponType;
         }
 
         private void OnWeaponDrop()
         {
-            Destroy(weaponSlots[_activeSlotIndex].gameObject);
+            weaponSlots[_activeSlotIndex].OnDrop();
             weaponSlots[_activeSlotIndex] = null;
         }
 
-        private void OnWeaponTake(BasicWeaponController takenWeapon)
+        private void OnWeaponTake(MeleeWeaponController takenWeapon)
         {
             for (var i = 0; i < weaponSlots.Length; i++)
             {
-                if (weaponSlots[i] != null) return;
+                if (weaponSlots[i] != null) continue;
 
-                var weapon = Instantiate(takenWeapon, takenWeapon.GetPositionInHands(),
-                    takenWeapon.GetRotationInHands());
-                weaponSlots[i] = weapon;
-                // TODO: Take new weapon.
+                weaponSlots[i] = takenWeapon;
+                _activeSlotIndex = i;
+                takenWeapon.OnPickUp(transform);
 
-                Destroy(takenWeapon.gameObject);
+                break;
             }
         }
     }

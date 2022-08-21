@@ -11,28 +11,28 @@ namespace Characters
         [SerializeField] protected float walkSpeed = 5.0f;
         [SerializeField] protected float runSpeed = 10.0f;
 
-        public CharacterController Controller { get; protected set; }
-        protected HealthComponent Health;
+        protected CharacterController Controller { get; private set; }
+        private HealthComponent _health;
 
         private void Awake()
         {
             Controller = GetComponent<CharacterController>();
-            Health = GetComponent<HealthComponent>();
+            _health = GetComponent<HealthComponent>();
         }
 
-        public void TakeDamage(uint damageAmount)
+        public virtual void TakeDamage(uint damageAmount)
         {
-            Health.TakeDamage(damageAmount);
+            _health.TakeDamage(damageAmount);
         }
 
-        public void HealUp(uint healAmount)
+        public virtual void HealUp(uint healAmount)
         {
-            Health.HealUp(healAmount);
+            _health.HealUp(healAmount);
         }
 
         public bool IsAlive()
         {
-            return Health.IsAlive;
+            return _health.IsAlive;
         }
     }
 }
