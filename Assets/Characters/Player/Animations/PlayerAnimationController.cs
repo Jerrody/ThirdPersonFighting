@@ -6,11 +6,14 @@ namespace Characters.Player.Animations
     internal sealed class PlayerAnimationController : EntityAnimationController
     {
         [SerializeField] private PlayerController player;
+        [SerializeField] private WeaponHolderController weaponHolder;
 
         private static readonly int VelocityZParam = Animator.StringToHash("VelocityZ");
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
+        private static readonly int AttackParam = Animator.StringToHash("Attack");
+        private static readonly int AttackIndexParam = Animator.StringToHash("AttackIndex");
 
-        private static WeaponType _previousWeaponType;
+        private WeaponType _previousWeaponType = WeaponType.Unarmed;
 
         private void Start()
         {
@@ -25,12 +28,24 @@ namespace Characters.Player.Animations
             Anim.SetFloat(VelocityXParam, velocity.x, 0.1f, Time.deltaTime);
         }
 
-        private void OnWeaponSwitched(WeaponType currentWeaponType)
+        private void OnWeaponSwitched(WeaponType newWeaponType)
         {
-            Anim.SetLayerWeight((int)_previousWeaponType, 0);
-            Anim.SetLayerWeight((int)currentWeaponType, 1);
+            if (weaponHolder.CurrentActiveWeapon != null)
+                weaponHolder.CurrentActiveWeapon.OnAttackAnimation += OnAttack;
 
-            _previousWeaponType = currentWeaponType;
+            if (_previousWeaponType == newWeaponType) return;
+
+            Anim.SetLayerWeight((int)_previousWeaponType, 0);
+            Anim.SetLayerWeight((int)newWeaponType, 1);
+
+            _previousWeaponType = newWeaponType;
+        }
+
+        // TODO: Possibly move to the `EntityAnimationController`.
+        private void OnAttack(uint attackIndex)
+        {
+            Anim.SetTrigger(AttackParam);
+            Anim.SetInteger(AttackIndexParam, (int)attackIndex);
         }
     }
 }

@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5993711567369615769}
+  animEventListener: {fileID: 0}
   weaponSlots:
   - {fileID: 0}
   - {fileID: 0}
@@ -244,7 +245,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.6233766, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -277,7 +278,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2898671823638525150}
-  m_LocalRotation: {x: -0.016164709, y: 0.45059887, z: 0.008160728, w: 0.8925429}
+  m_LocalRotation: {x: -0.0161647, y: 0.45059887, z: 0.008160722, w: 0.8925429}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -322,7 +323,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.6233766, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -345,7 +346,7 @@ GameObject:
   - component: {fileID: 5993711567369615769}
   - component: {fileID: 2343562946050458121}
   - component: {fileID: 3552860723552377559}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,6 +480,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 8c7479f5-272f-4519-a149-e25fdb56de67
     m_ActionName: CharacterControl/Drop[/Keyboard/q]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5993711567369615769}
+        m_TargetAssemblyTypeName: Characters.Player.PlayerController, Assembly-CSharp
+        m_MethodName: Attack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0777bd67-956f-4701-9313-480b946bf59c
+    m_ActionName: CharacterControl/Attack[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: CharacterControl
@@ -501,15 +518,13 @@ MonoBehaviour:
   onWeaponSwitched:
     m_PersistentCalls:
       m_Calls: []
-  onAttack:
-    m_PersistentCalls:
-      m_Calls: []
   onWeaponDrop:
     m_PersistentCalls:
       m_Calls: []
   onWeaponTake:
     m_PersistentCalls:
       m_Calls: []
+  animEventListener: {fileID: 343003739697877308}
 --- !u!114 &2343562946050458121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,7 +617,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.6233766, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1022,7 +1037,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.6233766, y: 1}
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -1276,7 +1291,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8565875997968843516}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &8277261941760024049
+--- !u!95 &3949632083715634555
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -1296,7 +1311,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2553070561655895583
+--- !u!114 &343003739697877308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800441624870485933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c1c256a4788ad4399238af686ba87d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2892291771579335847
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1309,3 +1336,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5993711567369615769}
+  weaponHolder: {fileID: 8938380523864235058}
