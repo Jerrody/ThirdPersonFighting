@@ -17,6 +17,7 @@ namespace Characters.Player
         public event WeaponManipulations OnWeaponSwitch;
         public UnityEvent<WeaponType> onWeaponSwitched;
         public event PlayerNotify OnAttack;
+        public UnityEvent<InputAction.CallbackContext> onBlock;
         public UnityEvent onWeaponDrop;
         public UnityEvent<MeleeWeaponController> onWeaponTake;
 
@@ -107,6 +108,12 @@ namespace Characters.Player
             OnAttack.Invoke();
 
             _canSwitchWeapon = enabled;
+        }
+
+        public void Block(InputAction.CallbackContext context)
+        {
+            enabled = context.canceled;
+            onBlock?.Invoke(context);
         }
 
         private void OnAttackEnd()

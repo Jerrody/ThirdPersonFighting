@@ -5,7 +5,9 @@ using Random = UnityEngine.Random;
 
 namespace Weapons
 {
-    public delegate void WeaponAnimationNotify(uint animationIndex);
+    public delegate void WeaponAttackAnimationNotify(uint animationIndex);
+
+    public delegate void WeaponBlockAnimationNotify(bool isBlocking);
 
     public enum WeaponType
     {
@@ -20,8 +22,8 @@ namespace Weapons
     [RequireComponent(typeof(Rigidbody))]
     public sealed class MeleeWeaponController : MonoBehaviour
     {
-        // Shouldn't be static.
-        public event WeaponAnimationNotify OnAttackAnimation;
+        public event WeaponAttackAnimationNotify OnAttackAnimation;
+        public event WeaponBlockAnimationNotify OnBlockAnimation;
 
         [Header("References")] [SerializeField]
         private BoxCollider collisionCollider;
@@ -89,9 +91,10 @@ namespace Weapons
             hitArea.gameObject.SetActive(true);
         }
 
-        public void OnBlock()
+        public void OnBlock(bool isBlocking)
         {
-            // TODO: Make a block.
+            collisionCollider.gameObject.SetActive(isBlocking);
+            OnBlockAnimation?.Invoke(isBlocking);
         }
 
         public void OnAttackEnd()

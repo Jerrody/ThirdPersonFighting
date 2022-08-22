@@ -12,6 +12,8 @@ namespace Characters.Player.Animations
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
         private static readonly int AttackParam = Animator.StringToHash("Attack");
         private static readonly int AttackIndexParam = Animator.StringToHash("AttackIndex");
+        private static readonly int BlockStartedParam = Animator.StringToHash("BlockStarted");
+        private static readonly int BlockEndedParam = Animator.StringToHash("BlockEnded");
 
         private WeaponType _previousWeaponType = WeaponType.Unarmed;
 
@@ -31,7 +33,10 @@ namespace Characters.Player.Animations
         private void OnWeaponSwitched(WeaponType newWeaponType)
         {
             if (weaponHolder.CurrentActiveWeapon != null)
+            {
                 weaponHolder.CurrentActiveWeapon.OnAttackAnimation += OnAttack;
+                weaponHolder.CurrentActiveWeapon.OnBlockAnimation += OnBlock;
+            }
 
             if (_previousWeaponType == newWeaponType) return;
 
@@ -46,6 +51,11 @@ namespace Characters.Player.Animations
         {
             Anim.SetTrigger(AttackParam);
             Anim.SetInteger(AttackIndexParam, (int)attackIndex);
+        }
+
+        private void OnBlock(bool isBlocking)
+        {
+            Anim.SetTrigger(isBlocking ? BlockStartedParam : BlockEndedParam);
         }
     }
 }

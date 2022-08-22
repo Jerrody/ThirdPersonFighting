@@ -1,6 +1,7 @@
 using Characters.Player;
 using Characters.Player.Animations;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Weapons
 {
@@ -14,14 +15,11 @@ namespace Weapons
         private WeaponType CurrentWeaponType { get; set; }
         private int _activeSlotIndex;
 
-        private bool _blockStarted;
-        private bool _blockHolding;
-        private bool _blockEnded;
-
         private void Start()
         {
             player.onWeaponTake.AddListener(OnWeaponTake);
             player.onWeaponDrop.AddListener(OnWeaponDrop);
+            player.onBlock.AddListener(OnBlock);
             player.OnWeaponSwitch += OnWeaponSwitch;
         }
 
@@ -101,9 +99,16 @@ namespace Weapons
             }
         }
 
-        private void OnBlock()
+        private void OnBlock(InputAction.CallbackContext context)
         {
-            weaponSlots[_activeSlotIndex]?.OnBlock();
+            if (context.started || context.canceled)
+            {
+                weaponSlots[_activeSlotIndex]?.OnBlock(context.started && !context.canceled);
+            }
+            else
+            {
+                weaponSlots[_activeSlotIndex]?.OnBlock(true);
+            }
         }
 
         public void OnAttackEnd()

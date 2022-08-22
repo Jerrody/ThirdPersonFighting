@@ -496,6 +496,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0777bd67-956f-4701-9313-480b946bf59c
     m_ActionName: CharacterControl/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5993711567369615769}
+        m_TargetAssemblyTypeName: Characters.Player.PlayerController, Assembly-CSharp
+        m_MethodName: Block
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d4ab4309-9dde-4e33-9a4a-e0b30a97245e
+    m_ActionName: CharacterControl/Block[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: CharacterControl
@@ -516,6 +532,9 @@ MonoBehaviour:
   walkSpeed: 5
   runSpeed: 10
   onWeaponSwitched:
+    m_PersistentCalls:
+      m_Calls: []
+  onBlock:
     m_PersistentCalls:
       m_Calls: []
   onWeaponDrop:
