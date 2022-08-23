@@ -30,7 +30,8 @@ namespace Characters.Player
         private Vector3 _moveDirection = Vector3.zero;
         private Vector2 _inputMoveAxis = Vector2.zero;
         private int _attackVariants; // SHOULD IT BE HERE?
-
+        
+        // TODO: Remove it and make `enabled` as an indicator?
         private bool _canSwitchWeapon = true;
 
         private void Start()
@@ -69,7 +70,7 @@ namespace Characters.Player
 
         public void SwitchWeapons(InputAction.CallbackContext context)
         {
-            if (!context.started || !_canSwitchWeapon) return;
+            if (!context.started || !_canSwitchWeapon || !enabled) return;
 
             var numKey = int.Parse(context.control.name);
 

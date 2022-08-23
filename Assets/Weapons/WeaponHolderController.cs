@@ -101,9 +101,13 @@ namespace Weapons
 
         private void OnBlock(InputAction.CallbackContext context)
         {
-            if (context.started || context.canceled)
+            if (context.started)
             {
-                weaponSlots[_activeSlotIndex]?.OnBlock(context.started && !context.canceled);
+                weaponSlots[_activeSlotIndex]?.OnBlock(true);
+            }
+            else if (context.canceled && !context.performed)
+            {
+                weaponSlots[_activeSlotIndex]?.OnBlock(false);
             }
             else
             {
