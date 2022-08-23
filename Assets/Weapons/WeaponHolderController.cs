@@ -101,6 +101,7 @@ namespace Weapons
 
         private void OnBlock(InputAction.CallbackContext context)
         {
+            // TODO: Refactor it.
             if (context.started)
             {
                 weaponSlots[_activeSlotIndex]?.OnBlock(true);

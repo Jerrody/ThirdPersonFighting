@@ -30,7 +30,7 @@ namespace Characters.Player
         private Vector3 _moveDirection = Vector3.zero;
         private Vector2 _inputMoveAxis = Vector2.zero;
         private int _attackVariants; // SHOULD IT BE HERE?
-        
+
         // TODO: Remove it and make `enabled` as an indicator?
         private bool _canSwitchWeapon = true;
 
@@ -39,19 +39,19 @@ namespace Characters.Player
             animEventListener.OnAttackAnimationEnd += OnAttackEnd;
         }
 
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (hit.gameObject.layer != Layers.Weapon || hit.collider.isTrigger) return;
+
+            _takeableWeapon = hit.gameObject.GetComponentInParent<MeleeWeaponController>();
+        }
+
         private void Update()
         {
             _moveDirection = new Vector3(Velocity.x, GravityScale, Velocity.z);
             _moveDirection = transform.TransformDirection(_moveDirection);
 
             Controller.Move(_moveDirection * Time.deltaTime);
-        }
-
-        public void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.layer != Layers.Weapon || other.isTrigger) return;
-
-            _takeableWeapon = other.GetComponentInParent<MeleeWeaponController>();
         }
 
         public void OnTriggerExit(Collider other)
@@ -113,8 +113,8 @@ namespace Characters.Player
 
         public void Block(InputAction.CallbackContext context)
         {
-            enabled = context.canceled;
             onBlock?.Invoke(context);
+            enabled = context.canceled;
         }
 
         private void OnAttackEnd()

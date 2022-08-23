@@ -12,15 +12,15 @@ namespace Weapons
     public enum WeaponType
     {
         Unarmed = 1,
-        Sword = 2,
+        GreatSword = 2,
         Axe = 3,
-        Glaive = 4,
+        Sword = 4,
     }
 
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(Rigidbody))]
-    public sealed class MeleeWeaponController : MonoBehaviour
+    public class MeleeWeaponController : MonoBehaviour
     {
         public event WeaponAttackAnimationNotify OnAttackAnimation;
         public event WeaponBlockAnimationNotify OnBlockAnimation;
@@ -68,7 +68,7 @@ namespace Weapons
             return weaponType;
         }
 
-        public void OnPickUp(Transform attachTo)
+        public virtual void OnPickUp(Transform attachTo)
         {
             var newTransform = transform;
             newTransform.position = positionInHand;
@@ -78,7 +78,7 @@ namespace Weapons
             SetColliders(false);
         }
 
-        public void OnDrop()
+        public virtual void OnDrop()
         {
             transform.SetParent(null);
 
