@@ -15,6 +15,7 @@ namespace Characters.Player
         public event WeaponManipulations OnWeaponSwitch;
         public UnityEvent<WeaponType> onWeaponSwitched;
         public event EntityNotify OnAttack;
+        public event EntityNotify OnHit;
         public UnityEvent<InputAction.CallbackContext> onBlock;
         public UnityEvent onWeaponDrop;
         public UnityEvent<MeleeWeaponController> onWeaponTake;
@@ -60,6 +61,13 @@ namespace Characters.Player
             if (other.gameObject.layer != Layers.Weapon || other.isTrigger) return;
 
             _takeableWeapon = null;
+        }
+
+        public override void TakeDamage(uint damageAmount)
+        {
+            OnHit?.Invoke();
+            enabled = true;
+            base.TakeDamage(damageAmount);
         }
 
         public void Move(InputAction.CallbackContext context)

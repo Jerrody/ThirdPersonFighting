@@ -15,11 +15,16 @@ namespace Weapons
         private WeaponType CurrentWeaponType { get; set; }
         private int _activeSlotIndex;
 
-        private void Start()
+        private void Awake()
         {
             player.onWeaponTake.AddListener(OnWeaponTake);
             player.onWeaponDrop.AddListener(OnWeaponDrop);
             player.onBlock.AddListener(OnBlock);
+
+            player.OnAttack += OnAttack;
+            player.OnHit += OnAttackEnd;
+            animEventListener.OnAttackAnimationEnd += OnAttackEnd;
+
             player.OnWeaponSwitch += OnWeaponSwitch;
         }
 
@@ -72,8 +77,6 @@ namespace Weapons
                     SetNewWeapon(takenWeapon, i);
                 }
 
-                player.OnAttack += OnAttack;
-                animEventListener.OnAttackAnimationEnd += OnAttackEnd;
                 takenWeapon.OnPickUp(transform);
                 CurrentWeaponType = CurrentActiveWeapon.WeaponType;
 
@@ -116,9 +119,9 @@ namespace Weapons
             }
         }
 
-        public void OnAttackEnd()
+        private void OnAttackEnd()
         {
-            weaponSlots[_activeSlotIndex].OnAttackEnd();
+            weaponSlots[_activeSlotIndex]?.OnAttackEnd();
         }
     }
 }

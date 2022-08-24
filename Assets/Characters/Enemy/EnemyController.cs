@@ -97,6 +97,7 @@ namespace Characters.Enemy
         private void AttackPlayer()
         {
             _agent.SetDestination(transform.position);
+            // transform.LookAt(_player);
 
             if (_alreadyAttacked) return;
 

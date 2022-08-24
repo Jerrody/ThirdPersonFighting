@@ -9,7 +9,7 @@ namespace Characters.Components
         [SerializeField, Range(0, int.MaxValue)]
         private int healthAmount = 100;
 
-        public bool IsAlive => healthAmount <= 0;
+        public bool IsAlive => healthAmount >= 0;
         private int _totalHealth;
 
         private void Awake()
@@ -19,7 +19,7 @@ namespace Characters.Components
 
         public void TakeDamage(uint damageAmount)
         {
-            healthAmount -= (int)damageAmount;
+            healthAmount = math.clamp(healthAmount - (int)damageAmount, 0, _totalHealth);
         }
 
         public void HealUp(uint healAmount)

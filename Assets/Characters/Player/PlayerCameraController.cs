@@ -4,7 +4,6 @@ namespace Characters.Player
 {
     public class PlayerCameraController : MonoBehaviour
     {
-        [SerializeField] private Transform player;
         [SerializeField] private CharacterController controller;
         [SerializeField] private Transform lookAt;
 

@@ -12,12 +12,14 @@ namespace Characters.Player.Animations
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
         private static readonly int AttackIndexParam = Animator.StringToHash("AttackIndex");
         private static readonly int BlockParam = Animator.StringToHash("Block");
+        private static readonly int HitParam = Animator.StringToHash("Hit");
 
         private WeaponType _previousWeaponType = WeaponType.Unarmed;
 
         private void Start()
         {
             player.onWeaponSwitched.AddListener(OnWeaponSwitched);
+            player.OnHit += () => Anim.SetTrigger(HitParam);
         }
 
         private void Update()

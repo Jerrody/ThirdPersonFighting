@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Characters
 {
     public delegate void EntityNotify();
-    
+
     [RequireComponent(typeof(HealthComponent))]
     public abstract class EntityController : MonoBehaviour, IHealable, IDamageable
     {
@@ -20,6 +20,8 @@ namespace Characters
 
         public virtual void TakeDamage(uint damageAmount)
         {
+            if (!Health.IsAlive) return; // TODO: Make an event from this?
+
             Health.TakeDamage(damageAmount);
         }
 
