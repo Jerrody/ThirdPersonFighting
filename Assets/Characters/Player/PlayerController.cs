@@ -1,5 +1,4 @@
-using System;
-using Characters.Player.Animations;
+using Characters.Animation;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -11,6 +10,7 @@ namespace Characters.Player
 
     public delegate void PlayerNotify();
 
+    [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerController : EntityController
     {
         // TODO: Make it unserializable and move it to the `WeaponHolderController`.
@@ -26,7 +26,9 @@ namespace Characters.Player
 
         public Vector3 Velocity { get; private set; }
 
+        private CharacterController Controller { get; set; }
         private MeleeWeaponController _takeableWeapon;
+
         private Vector3 _moveDirection = Vector3.zero;
         private Vector2 _inputMoveAxis = Vector2.zero;
         private int _attackVariants; // SHOULD IT BE HERE?
@@ -36,6 +38,7 @@ namespace Characters.Player
 
         private void Start()
         {
+            Controller = GetComponent<CharacterController>();
             animEventListener.OnAttackAnimationEnd += OnAttackEnd;
         }
 
@@ -85,7 +88,7 @@ namespace Characters.Player
             if (!context.started || _takeableWeapon == null || !_canSwitchWeapon) return;
 
             onWeaponTake?.Invoke(_takeableWeapon);
-            onWeaponSwitched?.Invoke(_takeableWeapon.GetWeaponType());
+            onWeaponSwitched?.Invoke(_takeableWeapon.WeaponType);
             _takeableWeapon = null;
 
             enabled = true;

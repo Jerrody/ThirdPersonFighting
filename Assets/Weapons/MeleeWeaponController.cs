@@ -40,6 +40,7 @@ namespace Weapons
 
         [SerializeField] private Vector3 rotationInHand = Vector3.zero;
 
+        public WeaponType WeaponType => weaponType;
         private Rigidbody _rb;
 
         private void OnValidate()
@@ -61,11 +62,6 @@ namespace Weapons
 
             target.TakeDamage(attackDamage);
             hitArea.gameObject.SetActive(false);
-        }
-
-        public WeaponType GetWeaponType()
-        {
-            return weaponType;
         }
 
         public virtual void OnPickUp(Transform attachTo)

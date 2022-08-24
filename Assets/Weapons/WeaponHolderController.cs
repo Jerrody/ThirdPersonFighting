@@ -1,5 +1,5 @@
+using Characters.Animation;
 using Characters.Player;
-using Characters.Player.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,7 +40,7 @@ namespace Weapons
             }
 
             newActiveWeapon.gameObject.SetActive(true);
-            CurrentWeaponType = newActiveWeapon.GetWeaponType();
+            CurrentWeaponType = newActiveWeapon.WeaponType;
 
             return CurrentWeaponType;
         }
@@ -75,7 +75,7 @@ namespace Weapons
                 player.OnAttack += OnAttack;
                 animEventListener.OnAttackAnimationEnd += OnAttackEnd;
                 takenWeapon.OnPickUp(transform);
-                CurrentWeaponType = CurrentActiveWeapon.GetWeaponType();
+                CurrentWeaponType = CurrentActiveWeapon.WeaponType;
 
                 break;
             }

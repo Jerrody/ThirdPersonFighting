@@ -10,7 +10,6 @@ namespace Characters.Player.Animations
 
         private static readonly int VelocityZParam = Animator.StringToHash("VelocityZ");
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
-        private static readonly int AttackParam = Animator.StringToHash("Attack");
         private static readonly int AttackIndexParam = Animator.StringToHash("AttackIndex");
         private static readonly int BlockParam = Animator.StringToHash("Block");
 

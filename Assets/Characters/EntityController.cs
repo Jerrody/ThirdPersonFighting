@@ -4,35 +4,26 @@ using UnityEngine;
 
 namespace Characters
 {
-    [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(HealthComponent))]
     public abstract class EntityController : MonoBehaviour, IHealable, IDamageable
     {
         [SerializeField] protected float walkSpeed = 5.0f;
-        [SerializeField] protected float runSpeed = 10.0f;
 
-        protected CharacterController Controller { get; private set; }
-        private HealthComponent _health;
+        protected HealthComponent Health;
 
         private void Awake()
         {
-            Controller = GetComponent<CharacterController>();
-            _health = GetComponent<HealthComponent>();
+            Health = GetComponent<HealthComponent>();
         }
 
         public virtual void TakeDamage(uint damageAmount)
         {
-            _health.TakeDamage(damageAmount);
+            Health.TakeDamage(damageAmount);
         }
 
         public virtual void HealUp(uint healAmount)
         {
-            _health.HealUp(healAmount);
-        }
-
-        public bool IsAlive()
-        {
-            return _health.IsAlive;
+            Health.HealUp(healAmount);
         }
     }
 }
