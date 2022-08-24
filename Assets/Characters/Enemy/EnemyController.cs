@@ -1,6 +1,5 @@
 using Characters.Animation;
 using Characters.Components;
-using Characters.Interfaces;
 using Characters.Player;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,6 +10,8 @@ namespace Characters.Enemy
     public sealed class EnemyController : EntityController
     {
         public event EntityNotify OnAttack;
+        public event EntityNotify OnDeath; // Subscribe to the player and heal him?
+        public static EntityNotify OnKill;
 
         [Header("References")] [SerializeField]
         private HitAreaComponent hitArea;
@@ -44,11 +45,13 @@ namespace Characters.Enemy
 
         private void Awake()
         {
-            _player = FindObjectOfType<PlayerController>().transform;
             Health = GetComponent<HealthComponent>();
+
+            _player = FindObjectOfType<PlayerController>().transform;
             _agent = GetComponent<NavMeshAgent>();
 
             animationEvent.OnAttackAnimationEnd += () => hitArea.gameObject.SetActive(false);
+            animationEvent.OnDeathAnimationEnd += () => Destroy(gameObject);
         }
 
         private void Update()
@@ -60,6 +63,17 @@ namespace Characters.Enemy
             if (!_playerInSightRange && !_playerInAttackRange) Patrolling();
             if (_playerInSightRange && !_playerInAttackRange) ChasePlayer();
             if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
+        }
+
+        public override void TakeDamage(uint damageAmount)
+        {
+            base.TakeDamage(damageAmount);
+            if (Health.IsAlive) return;
+
+            OnDeath?.Invoke();
+            OnKill?.Invoke();
+            
+            enabled = false;
         }
 
         private void Patrolling()
@@ -97,7 +111,7 @@ namespace Characters.Enemy
         private void AttackPlayer()
         {
             _agent.SetDestination(transform.position);
-            // transform.LookAt(_player);
+            // transform.LookAt(_player); // TODO: Adopt it.
 
             if (_alreadyAttacked) return;
 

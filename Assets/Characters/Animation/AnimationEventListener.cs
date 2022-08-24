@@ -7,10 +7,16 @@ namespace Characters.Animation
     public sealed class AnimationEventListener : MonoBehaviour
     {
         public event AnimationNotify OnAttackAnimationEnd;
+        public event AnimationNotify OnDeathAnimationEnd;
 
         public void AttackAnimationEnd()
         {
             OnAttackAnimationEnd?.Invoke();
+        }
+
+        public void DeathAnimationEnd()
+        {
+            OnDeathAnimationEnd?.Invoke();
         }
     }
 }

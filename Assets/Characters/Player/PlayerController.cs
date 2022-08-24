@@ -1,4 +1,5 @@
 using Characters.Animation;
+using Characters.Enemy;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -16,11 +17,15 @@ namespace Characters.Player
         public UnityEvent<WeaponType> onWeaponSwitched;
         public event EntityNotify OnAttack;
         public event EntityNotify OnHit;
+
+        public event EntityNotify OnEscapePressed;
+        public event EntityNotify OnDeath;
         public UnityEvent<InputAction.CallbackContext> onBlock;
         public UnityEvent onWeaponDrop;
         public UnityEvent<MeleeWeaponController> onWeaponTake;
 
         [SerializeField] private AnimationEventListener animEventListener; // TODO: Move it to the `EntityController`?
+        [SerializeField] private int healAmountOnKill = 40;
         private const float GravityScale = -20.0f;
 
         public Vector3 Velocity { get; private set; }
@@ -30,15 +35,28 @@ namespace Characters.Player
 
         private Vector3 _moveDirection = Vector3.zero;
         private Vector2 _inputMoveAxis = Vector2.zero;
-        private int _attackVariants; // SHOULD IT BE HERE?
 
         // TODO: Remove it and make `enabled` as an indicator?
         private bool _canSwitchWeapon = true;
 
+        private void OnValidate()
+        {
+            if (healAmountOnKill < 0)
+                healAmountOnKill = 0;
+        }
+
         private void Start()
         {
+            // TODO: Move it to the Player UI Controller.
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            InputSystem.EnableDevice(Keyboard.current);
+
             Controller = GetComponent<CharacterController>();
+
             animEventListener.OnAttackAnimationEnd += OnAttackEnd;
+            EnemyController.OnKill += () => { HealUp((uint)healAmountOnKill); };
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -65,9 +83,18 @@ namespace Characters.Player
 
         public override void TakeDamage(uint damageAmount)
         {
+            base.TakeDamage(damageAmount);
+            if (!Health.IsAlive)
+            {
+                OnDeath?.Invoke();
+                enabled = false;
+                InputSystem.DisableDevice(Keyboard.current);
+
+                return;
+            }
+
             OnHit?.Invoke();
             enabled = true;
-            base.TakeDamage(damageAmount);
         }
 
         public void Move(InputAction.CallbackContext context)
@@ -124,6 +151,13 @@ namespace Characters.Player
         {
             onBlock?.Invoke(context);
             enabled = context.canceled;
+        }
+
+        public void Escape(InputAction.CallbackContext context)
+        {
+            if (!context.started) return;
+
+            OnEscapePressed?.Invoke();
         }
 
         private void OnAttackEnd()

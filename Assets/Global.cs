@@ -10,4 +10,11 @@ public struct Layers
 public struct Tags
 {
     public const string Attachable = "Attachable";
+    public const string Camera = "Camera";
+}
+
+public struct Levels
+{
+    public const int MainMenu = 0;
+    public const int Main = 1;
 }

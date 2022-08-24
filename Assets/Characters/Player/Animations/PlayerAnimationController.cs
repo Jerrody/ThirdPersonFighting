@@ -12,7 +12,6 @@ namespace Characters.Player.Animations
         private static readonly int VelocityXParam = Animator.StringToHash("VelocityX");
         private static readonly int AttackIndexParam = Animator.StringToHash("AttackIndex");
         private static readonly int BlockParam = Animator.StringToHash("Block");
-        private static readonly int HitParam = Animator.StringToHash("Hit");
 
         private WeaponType _previousWeaponType = WeaponType.Unarmed;
 
@@ -20,6 +19,7 @@ namespace Characters.Player.Animations
         {
             player.onWeaponSwitched.AddListener(OnWeaponSwitched);
             player.OnHit += () => Anim.SetTrigger(HitParam);
+            player.OnDeath += OnDeath;
         }
 
         private void Update()
@@ -56,6 +56,12 @@ namespace Characters.Player.Animations
         private void OnBlock(bool isBlocking)
         {
             Anim.SetBool(BlockParam, isBlocking);
+        }
+
+        private void OnDeath()
+        {
+            player.OnDeath -= OnDeath;
+            Anim.SetTrigger(DeathParam);
         }
     }
 }

@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Attachable
+  - Camera
   layers:
   - Default
   - TransparentFX

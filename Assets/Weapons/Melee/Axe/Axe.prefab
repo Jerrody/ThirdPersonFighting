@@ -118,7 +118,7 @@ MonoBehaviour:
   collisionCollider: {fileID: 1948343390153285998}
   hitArea: {fileID: 4797542403487216030}
   weaponType: 3
-  attackDamage: 1
+  attackDamage: 25
   numberOfAttackVariants: 3
   positionInHand: {x: 0.1169, y: -0.0172, z: 0.1933}
   rotationInHand: {x: -11.774, y: 287.964, z: -178.341}

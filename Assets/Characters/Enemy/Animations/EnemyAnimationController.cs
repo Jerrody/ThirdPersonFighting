@@ -11,11 +11,18 @@ namespace Characters.Enemy.Animations
         private void Start()
         {
             enemy.OnAttack += () => Anim.SetTrigger(AttackParam);
+            enemy.OnDeath += OnDeath;
         }
 
         private void Update()
         {
             Anim.SetFloat(VelocityParam, enemy.Velocity);
+        }
+
+        private void OnDeath()
+        {
+            enemy.OnDeath -= OnDeath;
+            Anim.SetTrigger(DeathParam);
         }
     }
 }
