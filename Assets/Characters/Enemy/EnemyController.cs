@@ -11,20 +11,20 @@ namespace Characters.Enemy
     public sealed class EnemyController : EntityController
     {
         public event EntityNotify OnAttack;
-        
+
         [Header("References")] [SerializeField]
-        private BoxCollider hitArea;
+        private HitAreaComponent hitArea;
 
         [SerializeField] private AnimationEventListener animationEvent;
 
-        [Header("Layers")] [SerializeField] private LayerMask groundLayer;
+        // Layers
+        [SerializeField] private LayerMask groundLayer;
         [SerializeField] private LayerMask playerLayer;
 
         [Header("Stats")] [SerializeField] private float walkPointRange;
         [SerializeField] private float timeBetweenAttacks;
         [SerializeField] private float sightRange;
         [SerializeField] private float attackRange;
-        [SerializeField] private uint attackDamage;
 
         public float Velocity => _agent.velocity.z;
 
@@ -53,22 +53,13 @@ namespace Characters.Enemy
 
         private void Update()
         {
-            // Check for sight and attack range
             var position = transform.position;
             _playerInSightRange = Physics.CheckSphere(position, sightRange, playerLayer);
             _playerInAttackRange = Physics.CheckSphere(position, attackRange, playerLayer);
 
             if (!_playerInSightRange && !_playerInAttackRange) Patrolling();
             if (_playerInSightRange && !_playerInAttackRange) ChasePlayer();
-            // if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (!other.TryGetComponent<IDamageable>(out var damageable)) return;
-            damageable.TakeDamage(attackDamage);
-
-            hitArea.gameObject.SetActive(false);
+            if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
         }
 
         private void Patrolling()
@@ -106,7 +97,6 @@ namespace Characters.Enemy
         private void AttackPlayer()
         {
             _agent.SetDestination(transform.position);
-            transform.LookAt(_player);
 
             if (_alreadyAttacked) return;
 
@@ -120,6 +110,15 @@ namespace Characters.Enemy
         private void ResetAttack()
         {
             _alreadyAttacked = false;
+        }
+
+        // TODO: Don't forget to remove.
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, sightRange);
         }
     }
 }

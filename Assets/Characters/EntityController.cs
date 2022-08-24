@@ -21,7 +21,6 @@ namespace Characters
         public virtual void TakeDamage(uint damageAmount)
         {
             Health.TakeDamage(damageAmount);
-            print("SUS");
         }
 
         public virtual void HealUp(uint healAmount)

@@ -60,8 +60,8 @@ namespace Weapons
         {
             if (!other.TryGetComponent<IDamageable>(out var target) || other.gameObject.layer == Layers.Player) return;
 
-            target.TakeDamage(attackDamage);
             hitArea.gameObject.SetActive(false);
+            target.TakeDamage(attackDamage);
         }
 
         public virtual void OnPickUp(Transform attachTo)

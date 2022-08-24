@@ -8,10 +8,5 @@ namespace Weapons.Components
         public void TakeDamage(uint damageAmount)
         {
         }
-
-        public bool IsAlive()
-        {
-            return false;
-        }
     }
 }
