@@ -10,6 +10,8 @@ namespace Characters.Enemy
 {
     public sealed class EnemyController : EntityController
     {
+        public event EntityNotify OnAttack;
+        
         [Header("References")] [SerializeField]
         private BoxCollider hitArea;
 
@@ -58,7 +60,7 @@ namespace Characters.Enemy
 
             if (!_playerInSightRange && !_playerInAttackRange) Patrolling();
             if (_playerInSightRange && !_playerInAttackRange) ChasePlayer();
-            if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
+            // if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
         }
 
         private void OnTriggerEnter(Collider other)
@@ -109,6 +111,7 @@ namespace Characters.Enemy
             if (_alreadyAttacked) return;
 
             hitArea.gameObject.SetActive(true);
+            OnAttack?.Invoke();
             _alreadyAttacked = true;
 
             Invoke(nameof(ResetAttack), timeBetweenAttacks);

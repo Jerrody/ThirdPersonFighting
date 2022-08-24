@@ -16,8 +16,9 @@ namespace Characters.Player
 
             var dirToLookAt = lookAtPosition - new Vector3(position.x, lookAtPosition.y, position.z);
 
-            player.forward = dirToLookAt.normalized;
-            controller.transform.Rotate(player.forward * Time.deltaTime);
+            var controllerTransform = controller.transform;
+            controllerTransform.forward = dirToLookAt.normalized;
+            controllerTransform.Rotate(controllerTransform.forward * Time.deltaTime);
         }
     }
 }

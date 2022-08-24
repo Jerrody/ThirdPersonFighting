@@ -8,21 +8,19 @@ namespace Characters.Player
 {
     public delegate WeaponType WeaponManipulations(int slotIndex);
 
-    public delegate void PlayerNotify();
-
     [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerController : EntityController
     {
         // TODO: Make it unserializable and move it to the `WeaponHolderController`.
         public event WeaponManipulations OnWeaponSwitch;
         public UnityEvent<WeaponType> onWeaponSwitched;
-        public event PlayerNotify OnAttack;
+        public event EntityNotify OnAttack;
         public UnityEvent<InputAction.CallbackContext> onBlock;
         public UnityEvent onWeaponDrop;
         public UnityEvent<MeleeWeaponController> onWeaponTake;
 
         [SerializeField] private AnimationEventListener animEventListener; // TODO: Move it to the `EntityController`?
-        private const float GravityScale = -0.5f;
+        private const float GravityScale = -20.0f;
 
         public Vector3 Velocity { get; private set; }
 

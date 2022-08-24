@@ -14,8 +14,10 @@ namespace Weapons.Melee.Sword
 
         private Rigidbody _shieldRigidBody;
 
-        private void Start()
+        private void Awake()
         {
+            Rb = GetComponent<Rigidbody>();
+            attachShieldTo = GameObject.FindWithTag(Tags.Attachable).transform;
             _shieldRigidBody = shield.GetComponent<Rigidbody>();
         }
 

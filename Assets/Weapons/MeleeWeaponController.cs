@@ -41,7 +41,7 @@ namespace Weapons
         [SerializeField] private Vector3 rotationInHand = Vector3.zero;
 
         public WeaponType WeaponType => weaponType;
-        private Rigidbody _rb;
+        protected Rigidbody Rb;
 
         private void OnValidate()
         {
@@ -51,7 +51,7 @@ namespace Weapons
 
         private void Awake()
         {
-            _rb = GetComponent<Rigidbody>();
+            Rb = GetComponent<Rigidbody>();
 
             SetColliders(true);
         }
@@ -100,7 +100,7 @@ namespace Weapons
 
         private void SetColliders(bool isDropped)
         {
-            _rb.isKinematic = !isDropped;
+            Rb.isKinematic = !isDropped;
             collisionCollider.gameObject.SetActive(isDropped);
             hitArea.gameObject.SetActive(false);
         }

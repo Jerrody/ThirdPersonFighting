@@ -8,6 +8,11 @@ namespace Characters.Enemy.Animations
 
         private static readonly int VelocityParam = Animator.StringToHash("Velocity");
 
+        private void Start()
+        {
+            enemy.OnAttack += () => Anim.SetTrigger(AttackParam);
+        }
+
         private void Update()
         {
             Anim.SetFloat(VelocityParam, enemy.Velocity);
