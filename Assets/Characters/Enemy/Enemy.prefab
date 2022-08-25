@@ -121,13 +121,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3621f70208b6da43936d43f86259bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animEventListener: {fileID: 8648770766039760469}
   walkSpeed: 5
   hitArea: {fileID: 1997915528670596278}
   animationEvent: {fileID: 8648770766039760469}
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  playerLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 128
   walkPointRange: 5
@@ -247,10 +248,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2841822806504899606, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 3303163362559407883, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650304988165241618, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 5271646061052985437, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
         type: 3}
       propertyPath: m_Name
       value: HealthBarComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 5271646061052985437, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 9200945363149510864, guid: c2d7d9ec5f2032d4bae507ee0f1ace89,
         type: 3}

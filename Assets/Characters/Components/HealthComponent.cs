@@ -5,11 +5,9 @@ namespace Characters.Components
 {
     public delegate void HealthNotify(float totalHealth, float currentHealthAmount);
 
-    // TODO: Write tests.
     public sealed class HealthComponent : MonoBehaviour
     {
-        public event HealthNotify OnHealthIncrease;
-        public event HealthNotify OnHealthDecrease;
+        public event HealthNotify OnHealthChange;
 
         [SerializeField] private int healthAmount = 100;
 
@@ -18,8 +16,11 @@ namespace Characters.Components
 
         private void OnValidate()
         {
-            if (healthAmount < 0)
-                healthAmount = 0;
+            if (healthAmount <= 0)
+                healthAmount = 1;
+
+            _totalHealth = healthAmount;
+            OnHealthChange?.Invoke(_totalHealth, healthAmount);
         }
 
         private void Awake()
@@ -30,15 +31,15 @@ namespace Characters.Components
         public void TakeDamage(uint damageAmount)
         {
             healthAmount = math.clamp(healthAmount - (int)damageAmount, 0, _totalHealth);
-            OnHealthDecrease?.Invoke(_totalHealth, healthAmount);
+            OnHealthChange?.Invoke(_totalHealth, healthAmount);
         }
 
         public void HealUp(uint healAmount)
         {
             if (!IsAlive) return;
-            
+
             healthAmount = math.clamp(healthAmount + (int)healAmount, 0, _totalHealth);
-            OnHealthIncrease?.Invoke(_totalHealth, healthAmount);
+            OnHealthChange?.Invoke(_totalHealth, healthAmount);
         }
     }
 }

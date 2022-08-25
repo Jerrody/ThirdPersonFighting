@@ -9,6 +9,7 @@ namespace Characters.Components.HealthBar
         [SerializeField] private HealthComponent healthComponent;
         [SerializeField] private Image foreground;
 
+        [Header("Stats")]
         [SerializeField] private float reduceSpeed = 2.0f;
 
         private Transform _playerCameraTransform;
@@ -18,16 +19,10 @@ namespace Characters.Components.HealthBar
         private void Awake()
         {
             _playerCameraTransform = GameObject.FindWithTag(Tags.Camera).transform;
-            healthComponent.OnHealthDecrease += HealthFillAmountDecrease;
-            healthComponent.OnHealthIncrease += HealthFillAmountIncrease;
+            healthComponent.OnHealthChange += OnHealthChange;
         }
 
-        private void HealthFillAmountDecrease(float totalHealth, float currentHealthAmount)
-        {
-            _target = currentHealthAmount / totalHealth;
-        }
-
-        private void HealthFillAmountIncrease(float totalHealth, float currentHealthAmount)
+        private void OnHealthChange(float totalHealth, float currentHealthAmount)
         {
             _target = currentHealthAmount / totalHealth;
         }

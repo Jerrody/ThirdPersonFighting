@@ -7,27 +7,30 @@ namespace Characters.Player.UI
 {
     public sealed class PlayerUIController : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private PlayerController player;
-
+        [Header("References")]
+        [SerializeField] private PlayerController player;
         [SerializeField] private Camera playerCamera;
         [SerializeField] private AnimationEventListener playerAnimEvent;
 
-        [Header("Canvases")] [SerializeField] private Canvas escape;
+        [Header("Canvases")]
+        [SerializeField] private Canvas escape;
 
-        [Header("Text")] [SerializeField] private TextMeshProUGUI scoreText;
+        [Header("Text")] 
+        [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI lossText;
 
         private uint _scores;
 
         private void Awake()
         {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            
             player.OnDeath += OnDeath;
             player.OnEscapePressed += OnEscapePressed;
             playerAnimEvent.OnDeathAnimationEnd += OnEscapePressed;
             EnemyController.OnKill += () => { _scores++; };
 
-            Cursor.lockState = CursorLockMode.Confined;
             Time.timeScale = 1.0f;
         }
 
@@ -52,8 +55,6 @@ namespace Characters.Player.UI
             lossText.gameObject.SetActive(true);
             SetScoreText();
             scoreText.gameObject.SetActive(true);
-            
-            OnEscapePressed();
         }
 
         private void SetScoreText()

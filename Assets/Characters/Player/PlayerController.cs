@@ -1,4 +1,5 @@
-using Characters.Animation;
+using System;
+using Characters.Components;
 using Characters.Enemy;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,32 +13,28 @@ namespace Characters.Player
     [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerController : EntityController
     {
-        // TODO: Make it unserializable and move it to the `WeaponHolderController`.
-        public event WeaponManipulations OnWeaponSwitch;
-        public UnityEvent<WeaponType> onWeaponSwitched;
+        public event EntityNotify OnEscapePressed;
         public event EntityNotify OnAttack;
         public event EntityNotify OnHit;
-
-        public event EntityNotify OnEscapePressed;
         public event EntityNotify OnDeath;
-        public UnityEvent<InputAction.CallbackContext> onBlock;
-        public UnityEvent onWeaponDrop;
-        public UnityEvent<MeleeWeaponController> onWeaponTake;
+        public event EntityNotify OnWeaponDrop;
 
-        [SerializeField] private AnimationEventListener animEventListener; // TODO: Move it to the `EntityController`?
+        [field: NonSerialized] public event WeaponManipulations OnWeaponSwitch;
+        [field: NonSerialized] public UnityEvent<WeaponType> OnWeaponSwitched;
+        [field: NonSerialized] public UnityEvent<InputAction.CallbackContext> OnBlock;
+        [field: NonSerialized] public UnityEvent<MeleeWeaponController> OnWeaponTake;
+
         [SerializeField] private int healAmountOnKill = 40;
+
         private const float GravityScale = -20.0f;
 
         public Vector3 Velocity { get; private set; }
 
-        private CharacterController Controller { get; set; }
+        private CharacterController _controller;
         private MeleeWeaponController _takeableWeapon;
 
         private Vector3 _moveDirection = Vector3.zero;
         private Vector2 _inputMoveAxis = Vector2.zero;
-
-        // TODO: Remove it and make `enabled` as an indicator?
-        private bool _canSwitchWeapon = true;
 
         private void OnValidate()
         {
@@ -45,25 +42,17 @@ namespace Characters.Player
                 healAmountOnKill = 0;
         }
 
-        private void Start()
+        private void Awake()
         {
-            // TODO: Move it to the Player UI Controller.
+            OnWeaponSwitched = new UnityEvent<WeaponType>();
+            OnBlock = new UnityEvent<InputAction.CallbackContext>();
+            OnWeaponTake = new UnityEvent<MeleeWeaponController>();
 
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-            InputSystem.EnableDevice(Keyboard.current);
+            _controller = GetComponent<CharacterController>();
+            Health = GetComponent<HealthComponent>();
 
-            Controller = GetComponent<CharacterController>();
-
-            animEventListener.OnAttackAnimationEnd += OnAttackEnd;
+            animEventListener.OnAttackAnimationEnd += () => { enabled = true; };
             EnemyController.OnKill += () => { HealUp((uint)healAmountOnKill); };
-        }
-
-        private void OnControllerColliderHit(ControllerColliderHit hit)
-        {
-            if (hit.gameObject.layer != Layers.Weapon || hit.collider.isTrigger) return;
-
-            _takeableWeapon = hit.gameObject.GetComponentInParent<MeleeWeaponController>();
         }
 
         private void Update()
@@ -71,7 +60,14 @@ namespace Characters.Player
             _moveDirection = new Vector3(Velocity.x, GravityScale, Velocity.z);
             _moveDirection = transform.TransformDirection(_moveDirection);
 
-            Controller.Move(_moveDirection * Time.deltaTime);
+            _controller.Move(_moveDirection * Time.deltaTime);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.layer != Layers.Weapon || other.isTrigger) return;
+
+            _takeableWeapon = other.gameObject.GetComponentInParent<MeleeWeaponController>();
         }
 
         public void OnTriggerExit(Collider other)
@@ -88,7 +84,6 @@ namespace Characters.Player
             {
                 OnDeath?.Invoke();
                 enabled = false;
-                InputSystem.DisableDevice(Keyboard.current);
 
                 return;
             }
@@ -101,40 +96,42 @@ namespace Characters.Player
         {
             _inputMoveAxis = context.ReadValue<Vector2>();
 
-            Velocity = new Vector3(_inputMoveAxis.x * walkSpeed, _moveDirection.y, _inputMoveAxis.y * walkSpeed);
+            Velocity = new Vector3(_inputMoveAxis.x * moveSpeed, _moveDirection.y, _inputMoveAxis.y * moveSpeed);
         }
 
         public void SwitchWeapons(InputAction.CallbackContext context)
         {
-            if (!context.started || !_canSwitchWeapon || !enabled) return;
+            if (!context.started || !enabled) return;
+
+            enabled = true;
 
             var numKey = int.Parse(context.control.name);
 
+            // NOTE: It is safe operation if to use only numerics keys and not `0` for binding.
             var newActiveWeaponType = (WeaponType)OnWeaponSwitch?.Invoke(numKey - 1);
-            onWeaponSwitched?.Invoke(newActiveWeaponType);
-
-            enabled = true;
+            OnWeaponSwitched?.Invoke(newActiveWeaponType);
         }
 
         public void PickUp(InputAction.CallbackContext context)
         {
-            if (!context.started || _takeableWeapon == null || !_canSwitchWeapon) return;
-
-            onWeaponTake?.Invoke(_takeableWeapon);
-            onWeaponSwitched?.Invoke(_takeableWeapon.WeaponType);
-            _takeableWeapon = null;
+            if (!context.started || _takeableWeapon == null || !enabled) return;
 
             enabled = true;
+
+            OnWeaponTake?.Invoke(_takeableWeapon);
+            OnWeaponSwitched?.Invoke(_takeableWeapon.WeaponType);
+
+            _takeableWeapon = null;
         }
 
         public void Drop(InputAction.CallbackContext context)
         {
-            if (!context.started || !_canSwitchWeapon) return;
-
-            onWeaponDrop?.Invoke();
-            onWeaponSwitched?.Invoke(WeaponType.Unarmed); // TODO: Return `WeaponType` by the event.
+            if (!context.started || !enabled) return;
 
             enabled = true;
+
+            OnWeaponDrop?.Invoke();
+            OnWeaponSwitched?.Invoke(WeaponType.Unarmed); // TODO: Return `WeaponType` by the event.
         }
 
         public void Attack(InputAction.CallbackContext context)
@@ -142,15 +139,15 @@ namespace Characters.Player
             if (!context.started || OnAttack == null) return;
 
             enabled = false;
-            OnAttack.Invoke();
 
-            _canSwitchWeapon = enabled;
+            OnAttack.Invoke();
         }
 
         public void Block(InputAction.CallbackContext context)
         {
-            onBlock?.Invoke(context);
             enabled = context.canceled;
+
+            OnBlock?.Invoke(context);
         }
 
         public void Escape(InputAction.CallbackContext context)
@@ -158,12 +155,6 @@ namespace Characters.Player
             if (!context.started) return;
 
             OnEscapePressed?.Invoke();
-        }
-
-        private void OnAttackEnd()
-        {
-            enabled = true;
-            _canSwitchWeapon = true;
         }
     }
 }

@@ -7,47 +7,50 @@ namespace Weapons
 {
     public sealed class WeaponHolderController : MonoBehaviour
     {
+        [Header("References")] 
         [SerializeField] private PlayerController player;
         [SerializeField] private AnimationEventListener animEventListener;
         [SerializeField] private MeleeWeaponController[] weaponSlots = new MeleeWeaponController[2];
 
         public MeleeWeaponController CurrentActiveWeapon => weaponSlots[_activeSlotIndex];
-        private WeaponType CurrentWeaponType { get; set; }
+
+        private WeaponType CurrentWeaponType =>
+            CurrentActiveWeapon ? CurrentActiveWeapon.WeaponType : WeaponType.Unarmed;
+
         private int _activeSlotIndex;
 
         private void Awake()
         {
-            player.onWeaponTake.AddListener(OnWeaponTake);
-            player.onWeaponDrop.AddListener(OnWeaponDrop);
-            player.onBlock.AddListener(OnBlock);
-
+            player.OnWeaponDrop += OnWeaponDrop;
             player.OnAttack += OnAttack;
             player.OnHit += OnAttackEnd;
-            animEventListener.OnAttackAnimationEnd += OnAttackEnd;
-
             player.OnWeaponSwitch += OnWeaponSwitch;
+
+            animEventListener.OnAttackAnimationEnd += OnAttackEnd;
+        }
+
+        private void Start()
+        {
+            player.OnWeaponTake.AddListener(OnWeaponTake);
+            player.OnBlock.AddListener(OnBlock);
         }
 
         private WeaponType OnWeaponSwitch(int slotIndex)
         {
             if (_activeSlotIndex == slotIndex)
-                return CurrentActiveWeapon == null ? WeaponType.Unarmed : CurrentWeaponType;
+                return CurrentWeaponType;
 
             weaponSlots[_activeSlotIndex]?.gameObject.SetActive(false);
 
             _activeSlotIndex = slotIndex;
 
             var newActiveWeapon = weaponSlots[_activeSlotIndex];
-            if (newActiveWeapon == null)
-            {
-                CurrentWeaponType = WeaponType.Unarmed;
-                return CurrentWeaponType;
-            }
+            var newActiveWeaponType = CurrentWeaponType;
 
-            newActiveWeapon.gameObject.SetActive(true);
-            CurrentWeaponType = newActiveWeapon.WeaponType;
+            if (newActiveWeaponType != WeaponType.Unarmed)
+                newActiveWeapon.gameObject.SetActive(true);
 
-            return CurrentWeaponType;
+            return newActiveWeaponType;
         }
 
         private void OnWeaponDrop()
@@ -78,7 +81,6 @@ namespace Weapons
                 }
 
                 takenWeapon.OnPickUp(transform);
-                CurrentWeaponType = CurrentActiveWeapon.WeaponType;
 
                 break;
             }
@@ -104,19 +106,8 @@ namespace Weapons
 
         private void OnBlock(InputAction.CallbackContext context)
         {
-            // TODO: Refactor it.
-            if (context.started)
-            {
-                weaponSlots[_activeSlotIndex]?.OnBlock(true);
-            }
-            else if (context.canceled && !context.performed)
-            {
-                weaponSlots[_activeSlotIndex]?.OnBlock(false);
-            }
-            else
-            {
-                weaponSlots[_activeSlotIndex]?.OnBlock(true);
-            }
+            if (!context.performed)
+                weaponSlots[_activeSlotIndex]?.OnBlock(context.started && !context.canceled);
         }
 
         private void OnAttackEnd()

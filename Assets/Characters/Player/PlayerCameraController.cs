@@ -4,10 +4,9 @@ namespace Characters.Player
 {
     public class PlayerCameraController : MonoBehaviour
     {
-        [SerializeField] private CharacterController controller;
+        [SerializeField] private Transform player;
         [SerializeField] private Transform lookAt;
 
-        // TODO: Refactor and clear code.
         private void LateUpdate()
         {
             var position = transform.position;
@@ -15,7 +14,7 @@ namespace Characters.Player
 
             var dirToLookAt = lookAtPosition - new Vector3(position.x, lookAtPosition.y, position.z);
 
-            var controllerTransform = controller.transform;
+            var controllerTransform = player.transform;
             controllerTransform.forward = dirToLookAt.normalized;
             controllerTransform.Rotate(controllerTransform.forward * Time.deltaTime);
         }

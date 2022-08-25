@@ -9,20 +9,20 @@ namespace Characters.Enemy
 {
     public sealed class EnemyController : EntityController
     {
-        public event EntityNotify OnAttack;
-        public event EntityNotify OnDeath; // Subscribe to the player and heal him?
         public static EntityNotify OnKill;
+        public event EntityNotify OnAttack;
+        public event EntityNotify OnDeath;
 
-        [Header("References")] [SerializeField]
-        private HitAreaComponent hitArea;
-
+        [Header("References")]
+        [SerializeField] private HitAreaComponent hitArea;
         [SerializeField] private AnimationEventListener animationEvent;
 
-        // Layers
+        [Header("Layers")]
         [SerializeField] private LayerMask groundLayer;
-        [SerializeField] private LayerMask playerLayer;
+        [SerializeField] private LayerMask targetLayer;
 
-        [Header("Stats")] [SerializeField] private float walkPointRange;
+        [Header("Stats")]
+        [SerializeField] private float walkPointRange;
         [SerializeField] private float timeBetweenAttacks;
         [SerializeField] private float sightRange;
         [SerializeField] private float attackRange;
@@ -30,7 +30,7 @@ namespace Characters.Enemy
         public float Velocity => _agent.velocity.z;
 
         private NavMeshAgent _agent;
-        private Transform _player;
+        private Transform _target;
 
         // Patrolling
         private Vector3 _walkPoint;
@@ -40,43 +40,62 @@ namespace Characters.Enemy
         private bool _alreadyAttacked;
 
         // States
-        private bool _playerInSightRange;
-        private bool _playerInAttackRange;
+        private bool _isTargetDead;
+        private bool _targetInSightRange;
+        private bool _targetInAttackRange;
 
         private void Awake()
         {
             Health = GetComponent<HealthComponent>();
 
-            _player = FindObjectOfType<PlayerController>().transform;
+            var player = FindObjectOfType<PlayerController>();
+            player.OnDeath += () => { _isTargetDead = true; };
+
+            _target = player.transform;
             _agent = GetComponent<NavMeshAgent>();
 
-            animationEvent.OnAttackAnimationEnd += () => hitArea.gameObject.SetActive(false);
+            animationEvent.OnAttackAnimationEnd += () =>
+            {
+                hitArea.gameObject.SetActive(false);
+                Invoke(nameof(ResetAttack), timeBetweenAttacks);
+            };
             animationEvent.OnDeathAnimationEnd += () => Destroy(gameObject);
+        }
+
+        private void FixedUpdate()
+        {
+            if (_isTargetDead) return;
+
+            var position = transform.position;
+            _targetInSightRange = Physics.CheckSphere(position, sightRange, targetLayer);
+            _targetInAttackRange = Physics.CheckSphere(position, attackRange, targetLayer);
+
+            if (_targetInAttackRange)
+                _agent.SetDestination(transform.position);
         }
 
         private void Update()
         {
-            var position = transform.position;
-            _playerInSightRange = Physics.CheckSphere(position, sightRange, playerLayer);
-            _playerInAttackRange = Physics.CheckSphere(position, attackRange, playerLayer);
+            if (!_targetInSightRange && !_targetInAttackRange) Patrol();
 
-            if (!_playerInSightRange && !_playerInAttackRange) Patrolling();
-            if (_playerInSightRange && !_playerInAttackRange) ChasePlayer();
-            if (_playerInAttackRange && _playerInSightRange) AttackPlayer();
+            if (_isTargetDead) return;
+
+            if (_targetInSightRange && !_targetInAttackRange) Chase();
+            if (_targetInAttackRange && _targetInSightRange) Attack();
         }
 
         public override void TakeDamage(uint damageAmount)
         {
             base.TakeDamage(damageAmount);
-            if (Health.IsAlive) return;
+            if (Health.IsAlive || !enabled) return;
 
             OnDeath?.Invoke();
             OnKill?.Invoke();
-            
+
             enabled = false;
         }
 
-        private void Patrolling()
+        private void Patrol()
         {
             if (!_walkPointSet) SearchWalkPoint();
 
@@ -103,37 +122,45 @@ namespace Characters.Enemy
                 _walkPointSet = true;
         }
 
-        private void ChasePlayer()
+        private void Chase()
         {
-            _agent.SetDestination(_player.position);
+            _agent.SetDestination(_target.position);
         }
 
-        private void AttackPlayer()
+        private void Attack()
         {
-            _agent.SetDestination(transform.position);
-            // transform.LookAt(_player); // TODO: Adopt it.
+            var currentTransform = transform;
+            var currentRotation = currentTransform.rotation;
+
+            currentTransform.LookAt(_target);
+
+            var newRotation = currentTransform.rotation;
+            currentTransform.rotation = currentRotation;
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, moveSpeed * 2.0f * Time.deltaTime);
 
             if (_alreadyAttacked) return;
 
             hitArea.gameObject.SetActive(true);
             OnAttack?.Invoke();
             _alreadyAttacked = true;
-
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
 
         private void ResetAttack()
         {
             _alreadyAttacked = false;
         }
+        
+        
 
-        // TODO: Don't forget to remove.
         private void OnDrawGizmosSelected()
         {
+            var position = transform.position;
+
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRange);
+            Gizmos.DrawWireSphere(position, attackRange);
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, sightRange);
+            Gizmos.DrawWireSphere(position, sightRange);
         }
     }
 }

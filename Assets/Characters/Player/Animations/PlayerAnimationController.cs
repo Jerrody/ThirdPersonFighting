@@ -17,7 +17,7 @@ namespace Characters.Player.Animations
 
         private void Start()
         {
-            player.onWeaponSwitched.AddListener(OnWeaponSwitched);
+            player.OnWeaponSwitched.AddListener(OnWeaponSwitched);
             player.OnHit += () => Anim.SetTrigger(HitParam);
             player.OnDeath += OnDeath;
         }
@@ -46,7 +46,6 @@ namespace Characters.Player.Animations
             _previousWeaponType = newWeaponType;
         }
 
-        // TODO: Possibly move to the `EntityAnimationController`.
         private void OnAttack(uint attackIndex)
         {
             Anim.SetTrigger(AttackParam);
@@ -61,6 +60,9 @@ namespace Characters.Player.Animations
         private void OnDeath()
         {
             player.OnDeath -= OnDeath;
+            weaponHolder.CurrentActiveWeapon.OnAttackAnimation -= OnAttack;
+            weaponHolder.CurrentActiveWeapon.OnBlockAnimation -= OnBlock;
+
             Anim.SetTrigger(DeathParam);
         }
     }
