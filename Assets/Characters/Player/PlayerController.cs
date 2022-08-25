@@ -21,9 +21,10 @@ namespace Characters.Player
 
         public event WeaponManipulations OnWeaponSwitch;
 
+        public event WeaponOperations OnWeaponTake;
+
         [field: NonSerialized] public UnityEvent<WeaponType> OnWeaponSwitched;
         [field: NonSerialized] public UnityEvent<InputAction.CallbackContext> OnBlock;
-        [field: NonSerialized] public UnityEvent<MeleeWeaponController> OnWeaponTake;
 
         [SerializeField] private int healAmountOnKill = 40;
 
@@ -47,7 +48,6 @@ namespace Characters.Player
         {
             OnWeaponSwitched = new UnityEvent<WeaponType>();
             OnBlock = new UnityEvent<InputAction.CallbackContext>();
-            OnWeaponTake = new UnityEvent<MeleeWeaponController>();
 
             _controller = GetComponent<CharacterController>();
             Health = GetComponent<HealthComponent>();
@@ -120,7 +120,7 @@ namespace Characters.Player
 
             enabled = true;
 
-            OnWeaponTake?.Invoke(_takeableWeapon);
+            if (!(bool)OnWeaponTake?.Invoke(_takeableWeapon)) return;
             OnWeaponSwitched?.Invoke(_takeableWeapon.WeaponType);
 
             _takeableWeapon = null;

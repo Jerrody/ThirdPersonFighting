@@ -39,6 +39,8 @@ namespace Characters.Player.Animations
                 weaponHolder.CurrentActiveWeapon.OnBlockAnimation += OnBlock;
             }
 
+            if (_previousWeaponType == newWeaponType) return;
+
             Anim.SetLayerWeight((int)_previousWeaponType, 0);
             _previousWeaponType = newWeaponType;
 

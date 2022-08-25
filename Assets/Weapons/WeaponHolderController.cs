@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 namespace Weapons
 {
+    public delegate bool WeaponOperations(MeleeWeaponController takeableWeapon);
+    
     public sealed class WeaponHolderController : MonoBehaviour
     {
         [Header("References")] 
@@ -31,7 +33,7 @@ namespace Weapons
 
         private void Start()
         {
-            player.OnWeaponTake.AddListener(OnWeaponTake);
+            player.OnWeaponTake += OnWeaponTake;
             player.OnBlock.AddListener(OnBlock);
         }
 
@@ -61,8 +63,9 @@ namespace Weapons
             weaponSlots[_activeSlotIndex] = null;
         }
 
-        private void OnWeaponTake(MeleeWeaponController takenWeapon)
+        private bool OnWeaponTake(MeleeWeaponController takenWeapon)
         {
+            var result = false;
             for (var i = 0; i < weaponSlots.Length; i++)
             {
                 if (weaponSlots[i] != null) continue;
@@ -82,8 +85,11 @@ namespace Weapons
 
                 takenWeapon.OnPickUp(transform);
 
+                result = true;
                 break;
             }
+
+            return result;
         }
 
         private void SetNewWeapon(MeleeWeaponController newWeapon, int newWeaponIndex)
