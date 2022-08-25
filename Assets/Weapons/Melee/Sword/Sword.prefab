@@ -121,7 +121,7 @@ MonoBehaviour:
   weaponType: 4
   attackDamage: 15
   numberOfAttackVariants: 2
-  positionInHand: {x: 0.064, y: 0.006, z: 0.195}
+  positionInHand: {x: 0.165, y: 0.045, z: 0.308}
   rotationInHand: {x: 17.673, y: 116.355, z: -8.376}
   swordBoxCollider: {fileID: 3876190336801477852}
   shield: {fileID: 5957023130534288792}
@@ -172,8 +172,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.95935786, y: 0.37605837, z: 1.3729833}
-  m_Center: {x: 0.03905815, y: -0.07952961, z: 0.019673156}
+  m_Size: {x: 0.9488129, y: 0.34406906, z: 1.3729833}
+  m_Center: {x: 0.03378595, y: -0.06353487, z: 0.019673156}
 --- !u!114 &3246016331042533780
 MonoBehaviour:
   m_ObjectHideFlags: 0

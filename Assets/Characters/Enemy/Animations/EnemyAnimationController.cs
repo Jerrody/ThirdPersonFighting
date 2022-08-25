@@ -22,7 +22,7 @@ namespace Characters.Enemy.Animations
         private void OnDeath()
         {
             enemy.OnDeath -= OnDeath;
-            Anim.SetTrigger(DeathParam);
+            Anim.SetBool(DeadParam, true);
         }
     }
 }

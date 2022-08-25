@@ -5,6 +5,7 @@ namespace Characters.Player.Animations
 {
     internal sealed class PlayerAnimationController : EntityAnimationController
     {
+        [Header("References")]
         [SerializeField] private PlayerController player;
         [SerializeField] private WeaponHolderController weaponHolder;
 
@@ -18,7 +19,7 @@ namespace Characters.Player.Animations
         private void Start()
         {
             player.OnWeaponSwitched.AddListener(OnWeaponSwitched);
-            player.OnHit += () => Anim.SetTrigger(HitParam);
+            player.OnHit += OnHit;
             player.OnDeath += OnDeath;
         }
 
@@ -38,12 +39,10 @@ namespace Characters.Player.Animations
                 weaponHolder.CurrentActiveWeapon.OnBlockAnimation += OnBlock;
             }
 
-            if (_previousWeaponType == newWeaponType) return;
-
             Anim.SetLayerWeight((int)_previousWeaponType, 0);
-            Anim.SetLayerWeight((int)newWeaponType, 1);
-
             _previousWeaponType = newWeaponType;
+
+            Anim.SetLayerWeight((int)newWeaponType, 1);
         }
 
         private void OnAttack(uint attackIndex)
@@ -57,13 +56,16 @@ namespace Characters.Player.Animations
             Anim.SetBool(BlockParam, isBlocking);
         }
 
+        private void OnHit()
+        {
+            Anim.SetTrigger(HitParam);
+        }
+
         private void OnDeath()
         {
             player.OnDeath -= OnDeath;
-            weaponHolder.CurrentActiveWeapon.OnAttackAnimation -= OnAttack;
-            weaponHolder.CurrentActiveWeapon.OnBlockAnimation -= OnBlock;
 
-            Anim.SetTrigger(DeathParam);
+            Anim.SetBool(DeadParam, true);
         }
     }
 }

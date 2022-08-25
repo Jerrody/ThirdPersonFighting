@@ -6,7 +6,7 @@ namespace Characters
     {
         protected static readonly int AttackParam = Animator.StringToHash("Attack");
         protected static readonly int HitParam = Animator.StringToHash("Hit");
-        protected static readonly int DeathParam = Animator.StringToHash("Death");
+        protected static readonly int DeadParam = Animator.StringToHash("Dead");
 
         protected Animator Anim;
 

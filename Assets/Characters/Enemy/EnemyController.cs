@@ -124,6 +124,7 @@ namespace Characters.Enemy
 
         private void Chase()
         {
+            _alreadyAttacked = false;
             _agent.SetDestination(_target.position);
         }
 
@@ -150,8 +151,6 @@ namespace Characters.Enemy
         {
             _alreadyAttacked = false;
         }
-        
-        
 
         private void OnDrawGizmosSelected()
         {

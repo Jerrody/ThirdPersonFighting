@@ -19,7 +19,8 @@ namespace Characters.Player
         public event EntityNotify OnDeath;
         public event EntityNotify OnWeaponDrop;
 
-        [field: NonSerialized] public event WeaponManipulations OnWeaponSwitch;
+        public event WeaponManipulations OnWeaponSwitch;
+
         [field: NonSerialized] public UnityEvent<WeaponType> OnWeaponSwitched;
         [field: NonSerialized] public UnityEvent<InputAction.CallbackContext> OnBlock;
         [field: NonSerialized] public UnityEvent<MeleeWeaponController> OnWeaponTake;
@@ -82,8 +83,9 @@ namespace Characters.Player
             base.TakeDamage(damageAmount);
             if (!Health.IsAlive)
             {
-                OnDeath?.Invoke();
                 enabled = false;
+
+                OnDeath?.Invoke();
 
                 return;
             }
@@ -131,12 +133,12 @@ namespace Characters.Player
             enabled = true;
 
             OnWeaponDrop?.Invoke();
-            OnWeaponSwitched?.Invoke(WeaponType.Unarmed); // TODO: Return `WeaponType` by the event.
+            OnWeaponSwitched?.Invoke(WeaponType.Unarmed);
         }
 
         public void Attack(InputAction.CallbackContext context)
         {
-            if (!context.started || OnAttack == null) return;
+            if (!context.started || OnAttack == null || !Health.IsAlive) return;
 
             enabled = false;
 
@@ -145,6 +147,8 @@ namespace Characters.Player
 
         public void Block(InputAction.CallbackContext context)
         {
+            if (!Health.IsAlive) return;
+
             enabled = context.canceled;
 
             OnBlock?.Invoke(context);
@@ -152,7 +156,7 @@ namespace Characters.Player
 
         public void Escape(InputAction.CallbackContext context)
         {
-            if (!context.started) return;
+            if (!context.started || !Health.IsAlive) return;
 
             OnEscapePressed?.Invoke();
         }
