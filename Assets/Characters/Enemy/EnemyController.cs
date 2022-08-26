@@ -84,6 +84,16 @@ namespace Characters.Enemy
             if (_targetInAttackRange && _targetInSightRange) Attack();
         }
 
+        private void OnDrawGizmosSelected()
+        {
+            var position = transform.position;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(position, attackRange);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(position, sightRange);
+        }
+
         public override void TakeDamage(uint damageAmount)
         {
             base.TakeDamage(damageAmount);
@@ -150,16 +160,6 @@ namespace Characters.Enemy
         private void ResetAttack()
         {
             _alreadyAttacked = false;
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            var position = transform.position;
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(position, attackRange);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(position, sightRange);
         }
     }
 }
