@@ -12,7 +12,7 @@ And this logic is in the project is everywhere.
 namespace CoolNameSpace {
     public delegate void MyCoolNotify(); // All delegates are outside of class scope.
     
-    public sealed class MyCoolClass {
+    public sealed class MyCoolClass : MonoBehaviour {
         public static event MyCoolNotify MyCoolStaticEvent; // First goes static C# events.
         public event MyCoolNotify MyCoolEvent;  // After that goes non-static C# events.
         
