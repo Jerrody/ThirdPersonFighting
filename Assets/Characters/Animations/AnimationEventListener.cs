@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Characters.Animation
+namespace Characters.Animations
 {
     public delegate void AnimationNotify();
 

@@ -46,6 +46,8 @@ namespace Characters.Player
 
         private void Awake()
         {
+            EnemyController.OnKill += () => { HealUp((uint)healAmountOnKill); };
+
             OnWeaponSwitched = new UnityEvent<WeaponType>();
             OnBlock = new UnityEvent<InputAction.CallbackContext>();
 
@@ -53,7 +55,6 @@ namespace Characters.Player
             Health = GetComponent<HealthComponent>();
 
             animEventListener.OnAttackAnimationEnd += () => { enabled = true; };
-            EnemyController.OnKill += () => { HealUp((uint)healAmountOnKill); };
         }
 
         private void Update()

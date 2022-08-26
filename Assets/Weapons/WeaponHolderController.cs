@@ -1,4 +1,4 @@
-using Characters.Animation;
+using Characters.Animations;
 using Characters.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;

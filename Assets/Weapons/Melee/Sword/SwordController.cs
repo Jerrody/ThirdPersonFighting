@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Weapons.Melee.Sword
 {
-    public class SwordController : MeleeWeaponController
+    public sealed class SwordController : MeleeWeaponController
     {
         [SerializeField] private BoxCollider swordBoxCollider;
         [SerializeField] private GameObject shield;
@@ -19,6 +19,16 @@ namespace Weapons.Melee.Sword
             Rb = GetComponent<Rigidbody>();
             attachShieldTo = GameObject.FindWithTag(Tags.Attachable).transform;
             _shieldRigidBody = shield.GetComponent<Rigidbody>();
+        }
+
+        private void OnEnable()
+        {
+            shield.SetActive(true);
+        }
+
+        private void OnDisable()
+        {
+            shield.SetActive(false);
         }
 
         public override void OnPickUp(Transform attachTo)
@@ -41,16 +51,6 @@ namespace Weapons.Melee.Sword
             shield.gameObject.transform.SetParent(transform);
             swordBoxCollider.gameObject.SetActive(true);
             _shieldRigidBody.isKinematic = false;
-        }
-
-        private void OnEnable()
-        {
-            shield.SetActive(true);
-        }
-
-        private void OnDisable()
-        {
-            shield.SetActive(false);
         }
     }
 }

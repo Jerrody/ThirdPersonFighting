@@ -1,4 +1,4 @@
-using Characters.Animation;
+using Characters.Animations;
 using Characters.Components;
 using Characters.Player;
 using UnityEngine;
@@ -106,22 +106,6 @@ namespace Characters.Enemy
                 _walkPointSet = false;
         }
 
-        private void SearchWalkPoint()
-        {
-            var currentTransform = transform;
-            var position = currentTransform.position;
-
-            var randomZ = Random.Range(-walkPointRange, walkPointRange);
-            var randomX = Random.Range(-walkPointRange, walkPointRange);
-
-            _walkPoint = new Vector3(position.x + randomX, position.y,
-                position.z + randomZ);
-
-            var hitResult = Physics.Raycast(_walkPoint, -currentTransform.up, 2f, groundLayer);
-            if (hitResult)
-                _walkPointSet = true;
-        }
-
         private void Chase()
         {
             _alreadyAttacked = false;
@@ -145,6 +129,22 @@ namespace Characters.Enemy
             hitArea.gameObject.SetActive(true);
             OnAttack?.Invoke();
             _alreadyAttacked = true;
+        }
+
+        private void SearchWalkPoint()
+        {
+            var currentTransform = transform;
+            var position = currentTransform.position;
+
+            var randomZ = Random.Range(-walkPointRange, walkPointRange);
+            var randomX = Random.Range(-walkPointRange, walkPointRange);
+
+            _walkPoint = new Vector3(position.x + randomX, position.y,
+                position.z + randomZ);
+
+            var hitResult = Physics.Raycast(_walkPoint, -currentTransform.up, 2f, groundLayer);
+            if (hitResult)
+                _walkPointSet = true;
         }
 
         private void ResetAttack()

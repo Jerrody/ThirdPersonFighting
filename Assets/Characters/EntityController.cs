@@ -1,4 +1,4 @@
-using Characters.Animation;
+using Characters.Animations;
 using Characters.Components;
 using Characters.Interfaces;
 using UnityEngine;
@@ -8,7 +8,7 @@ namespace Characters
     public delegate void EntityNotify();
 
     [RequireComponent(typeof(HealthComponent))]
-    public abstract class EntityController : MonoBehaviour, IHealable, IDamageable
+    public abstract class EntityController : MonoBehaviour, IDamageable
     {
         [Header("References")]
         [SerializeField] protected AnimationEventListener animEventListener;
@@ -30,7 +30,7 @@ namespace Characters
             Health.TakeDamage(damageAmount);
         }
 
-        public virtual void HealUp(uint healAmount)
+        protected void HealUp(uint healAmount)
         {
             Health.HealUp(healAmount);
         }

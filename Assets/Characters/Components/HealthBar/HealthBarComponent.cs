@@ -22,17 +22,17 @@ namespace Characters.Components.HealthBar
             healthComponent.OnHealthChange += OnHealthChange;
         }
 
-        private void OnHealthChange(float totalHealth, float currentHealthAmount)
-        {
-            _target = currentHealthAmount / totalHealth;
-        }
-
         private void Update()
         {
             var currentTransform = transform;
             currentTransform.rotation =
                 Quaternion.LookRotation(currentTransform.position - _playerCameraTransform.position);
             foreground.fillAmount = Mathf.MoveTowards(foreground.fillAmount, _target, reduceSpeed * Time.deltaTime);
+        }
+
+        private void OnHealthChange(float totalHealth, float currentHealthAmount)
+        {
+            _target = currentHealthAmount / totalHealth;
         }
     }
 }

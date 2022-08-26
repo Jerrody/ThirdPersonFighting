@@ -1,4 +1,4 @@
-using Characters.Animation;
+using Characters.Animations;
 using Characters.Enemy;
 using TMPro;
 using UnityEngine;

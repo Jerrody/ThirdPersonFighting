@@ -25,19 +25,17 @@ namespace Weapons
         public event WeaponAttackAnimationNotify OnAttackAnimation;
         public event WeaponBlockAnimationNotify OnBlockAnimation;
 
-        [Header("References")] [SerializeField]
-        private BoxCollider collisionCollider;
-
+        [Header("References")]
+        [SerializeField] private BoxCollider collisionCollider;
         [SerializeField] private BoxCollider hitArea;
 
-        [Header("Stats")] [SerializeField] private WeaponType weaponType;
+        [Header("Stats")]
+        [SerializeField] private WeaponType weaponType;
         [SerializeField] private uint attackDamage = 1;
-
         [SerializeField] private uint numberOfAttackVariants = 1;
 
-        [Header("Transform in hand")] [SerializeField]
-        private Vector3 positionInHand = Vector3.zero;
-
+        [Header("Transform in hand")]
+        [SerializeField] private Vector3 positionInHand = Vector3.zero;
         [SerializeField] private Vector3 rotationInHand = Vector3.zero;
 
         public WeaponType WeaponType => weaponType;
@@ -84,6 +82,7 @@ namespace Weapons
         public void OnAttack()
         {
             OnAttackAnimation?.Invoke((uint)Random.Range(0, numberOfAttackVariants));
+
             hitArea.gameObject.SetActive(true);
         }
 
